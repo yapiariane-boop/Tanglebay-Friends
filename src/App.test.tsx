@@ -114,19 +114,27 @@ test.each(['home','group'] as const)('5 Seconds for a Stand %s guidance covers j
   render(<App/>);const user=userEvent.setup();
   await user.click(screen.getByRole('button',{name:mode==='home'?/I’m playing at home/:/I’m playing with a group/}));
   const variant=activities.find(a=>a.id==='five-minutes')!.variants[mode];
-  expect(variant.steps).toHaveLength(5);
+  expect(variant.steps).toHaveLength(mode==='group'?6:5);
   for(let i=0;i<variant.steps.length;i++){
     await screen.findByRole('heading',{level:1,name:variant.steps[i].title});
     const visual=screen.getByRole('region',{name:'Visual guide'});
     expect(visual.classList.contains(`visual-${variant.steps[i].visual}`)).toBe(true);
     expect(visual.getAttribute('data-running')).toBe('false');
-    if(i===2)expect(screen.getByText(/They choose their own starting position before hearing either player’s argument/)).toBeTruthy();
-    if(i===3)expect(screen.getByText(/Both players may choose the same position/)).toBeTruthy();
-    if(i===4){
-      expect(screen.getByText(/Each final vote earns that player 1 point/)).toBeTruthy();
-      expect(screen.getByText(/An equal final vote count is also a draw/)).toBeTruthy();
+    if(mode==='home'&&i===2)expect(screen.getByText(/They choose their own starting position before hearing either player’s argument/)).toBeTruthy();
+    if(mode==='group'&&i===2)expect(screen.getByText(/This is a physical game/)).toBeTruthy();
+    if(mode==='group'&&i===3)expect(screen.getByText(/the facilitator gives the Judges 10 seconds/)).toBeTruthy();
+    if(variant.steps[i].id==='make-case')expect(screen.getByText(/Both players may choose the same position/)).toBeTruthy();
+    if(i===variant.steps.length-1){
+      if(mode==='home'){
+        expect(screen.getByText(/Each final vote earns that player 1 point/)).toBeTruthy();
+        expect(screen.getByText(/An equal final vote count is also a draw/)).toBeTruthy();
+      } else {
+        expect(screen.getByText(/Anyone behind neither Player has no vote for that round/)).toBeTruthy();
+        expect(screen.getByText(/Each Judge behind a Player earns that Player 1 point/)).toBeTruthy();
+        expect(screen.getByText(/Follow the facilitator’s rotation order/)).toBeTruthy();
+      }
     }
-    await user.click(screen.getByRole('button',{name:i===4?/I’m Ready to Print/:/Next step/}));
+    await user.click(screen.getByRole('button',{name:i===variant.steps.length-1?/I’m Ready to Print/:/Next step/}));
   }
   await screen.findByRole('heading',{name:'You’re ready to print!'});
 });

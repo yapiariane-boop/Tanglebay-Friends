@@ -8,7 +8,7 @@ export const homepage: {
 export const logoArtwork = { src: './artwork/logo-crab.webp' };
 export const homeArtwork = { src: './artwork/scientist-home-transparent.webp', alt: 'A smiling Tanglebay scientist character in a white lab coat, raising a claw.' };
 export type Mode = 'home' | 'group';
-export type GuidanceVisual = 'teams' | 'scene' | 'discuss' | 'refine' | 'flip' | 'opponent' | 'stand' | 'position' | 'case' | 'judges';
+export type GuidanceVisual = 'teams' | 'scene' | 'discuss' | 'refine' | 'flip' | 'opponent' | 'stand' | 'position' | 'case' | 'judges' | 'arena' | 'group-position' | 'group-judges';
 export interface Step { visual?: GuidanceVisual; id: string; title: string; body: string; items?: string[] }
 export interface PackFile { id: string; title: string; href: string; copies: string; optional?: boolean; placeholder?: boolean }
 export interface DuplexGuide { previews: {src:string; alt:string; label:string}[]; flipEdge: string; orientation:string; cards:number }
@@ -87,7 +87,7 @@ const discussionGroupSteps: Step[] = [
   }
 ];
 
-const standSteps: Step[] = [
+const standHomeSteps: Step[] = [
   {
     "id": "find-opponent",
     "title": "Find Your Opponent",
@@ -138,6 +138,31 @@ const standSteps: Step[] = [
   }
 ];
 
+const standGroupSteps: Step[] = [
+  {
+    id:'set-rotation', title:'Choose Your Players & Judges', visual:'opponent',
+    body:'The facilitator chooses two Players for the first round. Everyone else is a Judge. Before the game begins, set a clear rotation order so everyone knows when they will play and when they will judge.',
+    items:['Announce the first pair and the order of the next pairs. Keep that order throughout the game.'],
+  },
+  {...standHomeSteps[1]},
+  {
+    id:'arrange-space', title:'Set Up Your Debate Space', visual:'arena',
+    body:'This is a physical game! Put a table in the middle with the board on it. The two Players stand at opposite ends of the table, and the Judges begin in front of them.',
+    items:['Leave space behind each Player for Judges to gather.','To support a Player, Judges run to stand behind them. Their final position will be their vote.'],
+  },
+  {
+    id:'group-pick-question', title:'Pick a Question & Take Your Places', visual:'group-position',
+    body:'Draw a question and read it aloud. The two Players have 5 seconds to choose AGREE, DISAGREE or IT DEPENDS. They may choose the same position.',
+    items:['Before either argument begins, the facilitator gives the Judges 10 seconds to run behind the Player they initially agree with.','These are starting choices, not points. The final positions after the arguments will determine the score.','Take turns drawing and reading the questions. The 5-second limit is for choosing a position, not for explaining an argument.'],
+  },
+  {...standHomeSteps[3], body:standHomeSteps[3].body+' Judges listen to both arguments before the facilitator opens the final positioning window.'},
+  {
+    id:'group-final-vote', title:'Reposition, Count & Rotate', visual:'group-judges',
+    body:'After both Players have made their case, the facilitator starts a 10-second timer. Judges run behind the Player whose argument convinced them most. They may stay where they are or switch sides.',
+    items:['When the 10 seconds are up, count only the Judges standing behind each Player. Anyone behind neither Player has no vote for that round.','Each Judge behind a Player earns that Player 1 point. Only this final headcount counts, not the starting positions. The Player with the most votes wins.','If the two arguments are the same, it’s a draw. An equal final headcount is also a draw.','Follow the facilitator’s rotation order, choose the next two Players, draw another question and go again.'],
+  },
+];
+
 // Other activity guidance and Group printable logistics remain prototype examples.
 function variant(id: string, title: string, mode: Mode): Variant {
   const group = mode === 'group';
@@ -162,8 +187,8 @@ function variant(id: string, title: string, mode: Mode): Variant {
     printing:'Use the same cards as the Home pack. For each set, print both PDF pages on ONE sheet, double-sided in landscape, flipping on the short edge. Fit both pages to the printable area using the same scaling. Test one plain-paper sheet for alignment, then cut after both sides are printed.',
   };
   if (id === 'five-minutes') return {
-    guidanceLabel:'DEBATE GUIDANCE', players:'2 or more players; extra participants judge the round', duration:'',
-    steps:standSteps, files, printing:'Final board, position pieces and question-card PDFs are still to be provided.',
+    guidanceLabel:'DEBATE GUIDANCE', players:group?'Two Players, Judges and a facilitator':'2 or more players; extra participants judge the round', duration:'',
+    steps:group?standGroupSteps:standHomeSteps, files, printing:'Final board, position pieces and question-card PDFs are still to be provided.',
   };
   return {players:group?'Example: 4–12 players in small teams':'Example: 1–3 players with an adult',duration:'Example: 20–30 minutes',printing:group?'Keep the facilitator resources separate. Confirm team numbers before printing.':'Keep each player’s workbook together. Confirm how many players need a copy.',files,steps:[
     {id:'welcome',title:`Prepare ${title}`,body:group?'This example uses shared team materials and an adult facilitator.':'This example uses a complete workbook and an adult helper.',items:[group?'Share one kit within each team.':'Give each player their own workbook.','All instructions here are placeholders awaiting author review.']},

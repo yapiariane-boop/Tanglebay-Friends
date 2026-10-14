@@ -11,6 +11,9 @@ const captions: Record<GuidanceVisual,string> = {
   stand:'Choose flat or 3D positions, then fold and mix the question cards.',
   position:'Five seconds to choose a position, not to deliver an argument. This is a demonstration, not a live timer.',
   case:'Even with the same position, players can make different arguments.',
+  arena:'Board on the central table, Players at opposite ends, Judges facing them. Gather behind a Player to support them.',
+  'group-position':'Players choose in 5 seconds. Judges then have 10 seconds to take their initial sides before the arguments. Demonstration only.',
+  'group-judges':'After both arguments, Judges have 10 seconds to stay or switch sides. At the buzzer, only Judges behind a Player count. Demonstration only.',
   judges:'Count final votes for each player’s argument. Starting positions do not score points. This tally is only an example.',
 };
 
@@ -65,10 +68,28 @@ function Positions() {
   return <div className="stand-positions"><span className="agree">AGREE</span><span className="disagree">DISAGREE</span><span className="depends">IT DEPENDS</span></div>;
 }
 function StandScene({kind}:{kind:GuidanceVisual}) {
+  if(kind==='arena'||kind==='group-position'||kind==='group-judges')return <PhysicalStand kind={kind}/>;
   if(kind==='opponent')return <div className="guide-sequence"><div className="stand-duel"><Debater name="A"/><span className="stand-versus">vs</span><Debater name="B"/></div><span className="guide-flow-arrow">→</span><div className="guide-prop stand-judges"><div className="guide-people"><Person/><Person/><Person/></div><strong>More players?</strong><span>You’re the Judges</span></div></div>;
   if(kind==='stand')return <div className="guide-sequence"><div className="guide-prop stand-build"><Positions/><div className="stand-options"><span>Flat</span><span className="stand-cube">3D</span></div><span>Choose your format</span></div><span className="guide-flow-arrow">→</span><div className="guide-prop"><div className="stand-paper-strip"><span>?<small>Cut</small></span><span>?<small>Fold</small></span></div><span>Prepare the questions</span></div><span className="guide-flow-arrow">→</span><div className="guide-prop"><div className="stand-bowl"><span className="bowl-slip slip-one">?</span><span className="bowl-slip slip-two">?</span><span className="bowl-slip slip-three">?</span><div/></div><span>Mix in a bowl</span></div></div>;
   if(kind==='position')return <div className="guide-sequence"><div className="guide-prop"><div className="guide-small-card">?<span>Read aloud</span></div><span>Draw a question</span></div><div className="guide-prop"><div className="stand-countdown">{[5,4,3,2,1].map((n,i)=><span key={n} style={{'--count-start':`${i}s`} as CSSProperties}>{n}</span>)}</div><span>5 seconds to choose</span></div><div className="guide-prop"><Positions/><div className="stand-position-marker">▲</div><span>Judges choose before arguments</span></div></div>;
   if(kind==='case')return <div className="guide-sequence"><div className="guide-prop"><Debater name="A" position/><span className="guide-speech stand-argument-a">I chose this because…</span></div><div className="guide-prop"><span className="stand-listen">↔</span><span>Explain · Listen · Respond</span><small className="stand-same-note">Same position? Different reasons.</small></div><div className="guide-prop"><Debater name="B" position/><span className="guide-speech stand-argument-b">I see it this way…</span></div></div>;
   if(kind==='judges')return <div className="guide-sequence"><div className="guide-prop"><div className="stand-initial"><span className="agree">AGREE</span><span className="disagree">DISAGREE</span><span className="depends">IT DEPENDS</span></div><span>Starting positions</span><small>Not scored</small></div><span className="guide-flow-arrow">→</span><div className="guide-prop"><div className="stand-ballots">{['A','B','A'].map((vote,i)=><div className={`stand-ballot vote-${i}`} key={i}><Person/><span className={`ballot-${vote.toLowerCase()}`}>{vote}</span></div>)}</div><span>Vote for an argument</span></div><span className="guide-flow-arrow">→</span><div className="guide-prop"><div className="stand-score"><span>A · 2 points</span><span>B · 1 point</span></div><span>1 Judge = 1 point</span><small>Example final tally</small></div></div>;
   return null;
+}
+
+function PhysicalStand({kind}:{kind:'arena'|'group-position'|'group-judges'}) {
+  const final=kind==='group-judges';
+  return <div className="physical-stand">
+    {kind==='group-position'&&<div className="physical-timing"><span>Players · 5 seconds</span><span>Then Judges · 10 seconds</span></div>}
+    {final&&<div className="physical-timing"><span>Both arguments heard</span><span>Judges · 10 seconds to reposition</span></div>}
+    <div className={`stand-arena ${final?'arena-final':''} ${kind==='group-position'?'arena-initial':''}`}>
+      <div className="arena-player arena-player-a"><Person/><strong>Player A</strong></div>
+      <div className="arena-table"><span>BOARD</span><small>Central table</small></div>
+      <div className="arena-player arena-player-b"><Person/><strong>Player B</strong></div>
+      <span className="arena-behind behind-a">Behind A</span><span className="arena-behind behind-b">Behind B</span>
+      <div className="arena-judge judge-one"><Person/></div><div className="arena-judge judge-two"><Person/></div><div className="arena-judge judge-three"><Person/></div>
+      <span className="arena-judges-label">Judges start here</span>
+    </div>
+    {final?<div className="physical-result"><strong>At the buzzer: count final positions</strong><span>Behind neither Player? No vote this round.</span></div>:<div className="physical-result"><span>{kind==='arena'?'Run behind the Player you support.':'Initial positions do not score points.'}</span></div>}
+  </div>;
 }
