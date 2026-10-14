@@ -114,7 +114,7 @@ test.each(['home','group'] as const)('5 Seconds for a Stand %s guidance covers j
   render(<App/>);const user=userEvent.setup();
   await user.click(screen.getByRole('button',{name:mode==='home'?/I’m playing at home/:/I’m playing with a group/}));
   const variant=activities.find(a=>a.id==='five-minutes')!.variants[mode];
-  expect(variant.steps).toHaveLength(mode==='group'?6:5);
+  expect(variant.steps).toHaveLength(mode==='group'?7:5);
   for(let i=0;i<variant.steps.length;i++){
     await screen.findByRole('heading',{level:1,name:variant.steps[i].title});
     const visual=screen.getByRole('region',{name:'Visual guide'});
@@ -124,7 +124,7 @@ test.each(['home','group'] as const)('5 Seconds for a Stand %s guidance covers j
     if(mode==='group'&&i===2)expect(screen.getByText(/This is a physical game/)).toBeTruthy();
     if(mode==='group'&&i===3)expect(screen.getByText(/the facilitator gives the Judges 10 seconds/)).toBeTruthy();
     if(variant.steps[i].id==='make-case')expect(screen.getByText(/Both players may choose the same position/)).toBeTruthy();
-    if(i===variant.steps.length-1){
+    if(variant.steps[i].id==='judges-decide'||variant.steps[i].id==='group-final-vote'){
       if(mode==='home'){
         expect(screen.getByText(/Each final vote earns that player 1 point/)).toBeTruthy();
         expect(screen.getByText(/An equal final vote count is also a draw/)).toBeTruthy();
@@ -140,4 +140,16 @@ test.each(['home','group'] as const)('5 Seconds for a Stand %s guidance covers j
   expect(screen.getByRole('link',{name:/Download PDF/}).getAttribute('href')).toBe('./packs/five-seconds-for-a-stand.pdf');
   expect(screen.getByText('PRINTABLE PDF · 5 PAGES')).toBeTruthy();
   expect(screen.queryByText('Demonstration materials only')).toBeNull();
+  if(mode==='group'){
+    const assembly=screen.getByRole('region',{name:'Build your 3D button'});
+    expect(assembly.getAttribute('data-running')).toBe('false');
+    await user.click(screen.getByRole('button',{name:'Play assembly animation'}));
+    expect(assembly.getAttribute('data-running')).toBe('true');
+    await user.click(screen.getByRole('button',{name:'Pause assembly animation'}));
+    expect(assembly.getAttribute('data-running')).toBe('false');
+    await user.click(screen.getByRole('button',{name:'4. Place on board'}));
+    expect(assembly.getAttribute('data-frame')).toBe('3');
+  }else{
+    expect(screen.queryByRole('region',{name:'Build your 3D button'})).toBeNull();
+  }
 });

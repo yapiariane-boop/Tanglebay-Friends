@@ -8,11 +8,11 @@ export const homepage: {
 export const logoArtwork = { src: './artwork/logo-crab.webp' };
 export const homeArtwork = { src: './artwork/scientist-home-transparent.webp', alt: 'A smiling Tanglebay scientist character in a white lab coat, raising a claw.' };
 export type Mode = 'home' | 'group';
-export type GuidanceVisual = 'teams' | 'scene' | 'discuss' | 'refine' | 'flip' | 'opponent' | 'stand' | 'position' | 'case' | 'judges' | 'arena' | 'group-position' | 'group-judges';
+export type GuidanceVisual = 'teams' | 'scene' | 'discuss' | 'refine' | 'flip' | 'opponent' | 'stand' | 'position' | 'case' | 'judges' | 'arena' | 'group-position' | 'group-judges' | 'questions';
 export interface Step { visual?: GuidanceVisual; id: string; title: string; body: string; items?: string[] }
 export interface PackFile { id: string; title: string; href: string; copies: string; optional?: boolean; placeholder?: boolean; pageCount?: number }
 export interface DuplexGuide { previews: {src:string; alt:string; label:string}[]; flipEdge: string; orientation:string; cards:number }
-export interface Variant { comingSoonFiles?: string[]; duplexGuide?: DuplexGuide; guidanceLabel?: string; players: string; duration: string; steps: Step[]; printing: string; files: PackFile[] }
+export interface Variant { cubeAssembly?: {patternSrc:string;boardSrc:string}; comingSoonFiles?: string[]; duplexGuide?: DuplexGuide; guidanceLabel?: string; players: string; duration: string; steps: Step[]; printing: string; files: PackFile[] }
 export interface Activity { id: string; title: string; catchphrase: string; description: string; episodeIds: string[]; color: string; artwork: {src?: string; alt: string}; gallery?: {src: string; alt: string}[]; variants: Record<Mode, Variant> }
 export interface Episode {id: string; title: string; description: string; artwork?: {src: string; alt: string}; comingSoon?: boolean}
 export const episodes: Episode[] = [
@@ -161,6 +161,11 @@ const standGroupSteps: Step[] = [
     body:'After both Players have made their case, the facilitator starts a 10-second timer. Judges run behind the Player whose argument convinced them most. They may stay where they are or switch sides.',
     items:['When the 10 seconds are up, count only the Judges standing behind each Player. Anyone behind neither Player has no vote for that round.','Each Judge behind a Player earns that Player 1 point. Only this final headcount counts, not the starting positions. The Player with the most votes wins.','If the two arguments are the same, it’s a draw. An equal final headcount is also a draw.','Follow the facilitator’s rotation order, choose the next two Players, draw another question and go again.'],
   },
+  {
+    id:'create-questions', title:'Create Your Own Questions', visual:'questions',
+    body:'Want to keep playing? Invite the children to write their own questions for the next rounds. Create prompts that let players take a stand: AGREE, DISAGREE or IT DEPENDS.',
+    items:['Try questions with more than one answer worth defending.','Cut out and fold the new questions, mix them into the bowl and keep playing.','Continue using the facilitator’s rotation order and the same debate and voting rules.'],
+  },
 ];
 
 // Other activity guidance and Group printable logistics remain prototype examples.
@@ -189,6 +194,7 @@ function variant(id: string, title: string, mode: Mode): Variant {
   if (id === 'five-minutes') return {
     guidanceLabel:'DEBATE GUIDANCE', players:group?'Two Players, Judges and a facilitator':'2 or more players; extra participants judge the round', duration:'',
     steps:group?standGroupSteps:standHomeSteps,
+    cubeAssembly:group?{patternSrc:'./artwork/stand-cube-pattern.webp',boardSrc:'./artwork/stand-assembly-board.webp'}:undefined,
     files:[{id:'activity',title:group?'Team activity kit — 5 Seconds for a Stand':'5 Seconds for a Stand — Home pack',href:'./packs/five-seconds-for-a-stand.pdf',copies:'5-page pack: board, three 3D position templates and question cards',placeholder:false,pageCount:5}],
     comingSoonFiles:group?['Facilitation Guide']:undefined,
     printing:'Choose the flat or 3D version. For flat play, use the board on page 1 and the questions on page 5. For 3D pieces, also print pages 2–4, then cut and assemble the templates. Cut out the questions, fold them and mix them in a bowl.',
