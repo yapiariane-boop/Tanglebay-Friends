@@ -12,7 +12,7 @@ export type GuidanceVisual = 'teams' | 'scene' | 'discuss' | 'refine' | 'flip';
 export interface Step { visual?: GuidanceVisual; id: string; title: string; body: string; items?: string[] }
 export interface PackFile { id: string; title: string; href: string; copies: string; optional?: boolean; placeholder?: boolean }
 export interface DuplexGuide { previews: {src:string; alt:string; label:string}[]; flipEdge: string; orientation:string; cards:number }
-export interface Variant { duplexGuide?: DuplexGuide; guidanceLabel?: string; players: string; duration: string; steps: Step[]; printing: string; files: PackFile[] }
+export interface Variant { comingSoonFiles?: string[]; duplexGuide?: DuplexGuide; guidanceLabel?: string; players: string; duration: string; steps: Step[]; printing: string; files: PackFile[] }
 export interface Activity { id: string; title: string; catchphrase: string; description: string; episodeIds: string[]; color: string; artwork: {src?: string; alt: string}; gallery?: {src: string; alt: string}[]; variants: Record<Mode, Variant> }
 export interface Episode {id: string; title: string; description: string; artwork?: {src: string; alt: string}; comingSoon?: boolean}
 export const episodes: Episode[] = [
@@ -105,7 +105,10 @@ function variant(id: string, title: string, mode: Mode): Variant {
   };
   if (id === 'discussion-cards' && mode === 'group') return {
     guidanceLabel:'DISCUSSION GUIDANCE', players:'Small teams with a facilitator', duration:'',
-    steps:discussionGroupSteps, files, printing:'Final Group printable materials and copy counts are still to be provided.',
+    steps:discussionGroupSteps,
+    files:[{id:'activity',title:'Team activity kit — Discussion Cards',href:'./packs/discussion-cards-home-pack.pdf',copies:'Each set: 2 PDF pages → 1 double-sided sheet → 8 cards',placeholder:false}],
+    comingSoonFiles:['Facilitation Guide'],
+    printing:'Use the same cards as the Home pack. For each set, print both PDF pages on ONE sheet, double-sided in landscape, flipping on the short edge. Fit both pages to the printable area using the same scaling. Test one plain-paper sheet for alignment, then cut after both sides are printed.',
   };
   return {players:group?'Example: 4–12 players in small teams':'Example: 1–3 players with an adult',duration:'Example: 20–30 minutes',printing:group?'Keep the facilitator resources separate. Confirm team numbers before printing.':'Keep each player’s workbook together. Confirm how many players need a copy.',files,steps:[
     {id:'welcome',title:`Prepare ${title}`,body:group?'This example uses shared team materials and an adult facilitator.':'This example uses a complete workbook and an adult helper.',items:[group?'Share one kit within each team.':'Give each player their own workbook.','All instructions here are placeholders awaiting author review.']},
