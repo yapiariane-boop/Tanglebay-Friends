@@ -10,7 +10,7 @@ export const homeArtwork = { src: './artwork/scientist-home-transparent.webp', a
 export type Mode = 'home' | 'group';
 export type GuidanceVisual = 'teams' | 'scene' | 'discuss' | 'refine' | 'flip' | 'opponent' | 'stand' | 'position' | 'case' | 'judges' | 'arena' | 'group-position' | 'group-judges';
 export interface Step { visual?: GuidanceVisual; id: string; title: string; body: string; items?: string[] }
-export interface PackFile { id: string; title: string; href: string; copies: string; optional?: boolean; placeholder?: boolean }
+export interface PackFile { id: string; title: string; href: string; copies: string; optional?: boolean; placeholder?: boolean; pageCount?: number }
 export interface DuplexGuide { previews: {src:string; alt:string; label:string}[]; flipEdge: string; orientation:string; cards:number }
 export interface Variant { comingSoonFiles?: string[]; duplexGuide?: DuplexGuide; guidanceLabel?: string; players: string; duration: string; steps: Step[]; printing: string; files: PackFile[] }
 export interface Activity { id: string; title: string; catchphrase: string; description: string; episodeIds: string[]; color: string; artwork: {src?: string; alt: string}; gallery?: {src: string; alt: string}[]; variants: Record<Mode, Variant> }
@@ -172,7 +172,7 @@ function variant(id: string, title: string, mode: Mode): Variant {
   if (id === 'discussion-cards' && mode === 'home') return {
     guidanceLabel:'DISCUSSION GUIDANCE', players:'Play with a friend, sibling or adult', duration:'',
     steps:discussionHomeSteps,
-    files:[{id:'activity',title:'Discussion Cards — Home pack',href:'./packs/discussion-cards-home-pack.pdf',copies:'2 PDF pages → 1 double-sided sheet → 8 cards',placeholder:false}],
+    files:[{id:'activity',title:'Discussion Cards — Home pack',href:'./packs/discussion-cards-home-pack.pdf',copies:'2 PDF pages → 1 double-sided sheet → 8 cards',placeholder:false,pageCount:2}],
     printing:'Print both PDF pages on opposite sides of ONE sheet, then cut along the dotted lines. Do not cut until both sides are printed.',
     duplexGuide:{orientation:'Landscape',flipEdge:'Short edge',cards:8,previews:[
       {src:'./artwork/discussion-pack-preview-1.webp',alt:'Fronts of the eight discussion cards, with story scenes and questions.',label:'Page 1 · Front'},
@@ -182,13 +182,16 @@ function variant(id: string, title: string, mode: Mode): Variant {
   if (id === 'discussion-cards' && mode === 'group') return {
     guidanceLabel:'DISCUSSION GUIDANCE', players:'Small teams with a facilitator', duration:'',
     steps:discussionGroupSteps,
-    files:[{id:'activity',title:'Team activity kit — Discussion Cards',href:'./packs/discussion-cards-home-pack.pdf',copies:'Each set: 2 PDF pages → 1 double-sided sheet → 8 cards',placeholder:false}],
+    files:[{id:'activity',title:'Team activity kit — Discussion Cards',href:'./packs/discussion-cards-home-pack.pdf',copies:'Each set: 2 PDF pages → 1 double-sided sheet → 8 cards',placeholder:false,pageCount:2}],
     comingSoonFiles:['Facilitation Guide'],
     printing:'Use the same cards as the Home pack. For each set, print both PDF pages on ONE sheet, double-sided in landscape, flipping on the short edge. Fit both pages to the printable area using the same scaling. Test one plain-paper sheet for alignment, then cut after both sides are printed.',
   };
   if (id === 'five-minutes') return {
     guidanceLabel:'DEBATE GUIDANCE', players:group?'Two Players, Judges and a facilitator':'2 or more players; extra participants judge the round', duration:'',
-    steps:group?standGroupSteps:standHomeSteps, files, printing:'Final board, position pieces and question-card PDFs are still to be provided.',
+    steps:group?standGroupSteps:standHomeSteps,
+    files:[{id:'activity',title:group?'Team activity kit — 5 Seconds for a Stand':'5 Seconds for a Stand — Home pack',href:'./packs/five-seconds-for-a-stand.pdf',copies:'5-page pack: board, three 3D position templates and question cards',placeholder:false,pageCount:5}],
+    comingSoonFiles:group?['Facilitation Guide']:undefined,
+    printing:'Choose the flat or 3D version. For flat play, use the board on page 1 and the questions on page 5. For 3D pieces, also print pages 2–4, then cut and assemble the templates. Cut out the questions, fold them and mix them in a bowl.',
   };
   return {players:group?'Example: 4–12 players in small teams':'Example: 1–3 players with an adult',duration:'Example: 20–30 minutes',printing:group?'Keep the facilitator resources separate. Confirm team numbers before printing.':'Keep each player’s workbook together. Confirm how many players need a copy.',files,steps:[
     {id:'welcome',title:`Prepare ${title}`,body:group?'This example uses shared team materials and an adult facilitator.':'This example uses a complete workbook and an adult helper.',items:[group?'Share one kit within each team.':'Give each player their own workbook.','All instructions here are placeholders awaiting author review.']},
