@@ -8,7 +8,7 @@ export const homepage: {
 export const logoArtwork = { src: './artwork/logo-crab.webp' };
 export const homeArtwork = { src: './artwork/scientist-home-transparent.webp', alt: 'A smiling Tanglebay scientist character in a white lab coat, raising a claw.' };
 export type Mode = 'home' | 'group';
-export type GuidanceVisual = 'teams' | 'scene' | 'discuss' | 'refine' | 'flip';
+export type GuidanceVisual = 'teams' | 'scene' | 'discuss' | 'refine' | 'flip' | 'opponent' | 'stand' | 'position' | 'case' | 'judges';
 export interface Step { visual?: GuidanceVisual; id: string; title: string; body: string; items?: string[] }
 export interface PackFile { id: string; title: string; href: string; copies: string; optional?: boolean; placeholder?: boolean }
 export interface DuplexGuide { previews: {src:string; alt:string; label:string}[]; flipEdge: string; orientation:string; cards:number }
@@ -87,6 +87,57 @@ const discussionGroupSteps: Step[] = [
   }
 ];
 
+const standSteps: Step[] = [
+  {
+    "id": "find-opponent",
+    "title": "Find Your Opponent",
+    "body": "Find someone ready to challenge you! This game works best with 2 or more players. With two players, you’ll debate each other. With more players, everyone else becomes a Judge for the round.",
+    "visual": "opponent"
+  },
+  {
+    "id": "build-stand",
+    "title": "Build Your Stand",
+    "body": "Print your board and get your three positions ready: AGREE, DISAGREE and IT DEPENDS.",
+    "items": [
+      "Feeling crafty? Cut out and build the 3D buttons.",
+      "Want to get straight to the debate? Use the flat versions instead.",
+      "Cut out the question cards, fold them, shuffle them and place them in a bowl or container."
+    ],
+    "visual": "stand"
+  },
+  {
+    "id": "pick-question",
+    "title": "Pick a Question",
+    "body": "Draw a question and read it aloud. Each player has 5 seconds to take a stand: AGREE, DISAGREE or IT DEPENDS. No long strategic meeting with yourself. Five seconds means five seconds!",
+    "items": [
+      "Take turns drawing and reading the questions.",
+      "Playing with Judges? They choose their own starting position before hearing either player’s argument. These starting choices do not score points.",
+      "The 5-second limit is for choosing your position, not for explaining your argument."
+    ],
+    "visual": "position"
+  },
+  {
+    "id": "make-case",
+    "title": "Make Your Case",
+    "body": "Explain your choice and defend your reasoning. Why did you choose that position? Listen to the other player’s argument, respond to their ideas and discuss where you agree or disagree. There isn’t always one right answer. A strong argument is one you can explain.",
+    "items": [
+      "Both players may choose the same position. If that happens, each explains their own reasoning; the Judges will compare the arguments, not just the positions."
+    ],
+    "visual": "case"
+  },
+  {
+    "id": "judges-decide",
+    "title": "Let the Judges Decide",
+    "body": "Playing with more than two people? It’s persuasion time. After hearing both arguments, each Judge votes for the player whose argument convinced them most, whether or not they changed their starting position.",
+    "items": [
+      "Each final vote earns that player 1 point. Count the votes: the player with the most wins the round. Starting choices never count towards the score.",
+      "If the two arguments are the same, it’s a draw. An equal final vote count is also a draw.",
+      "Rotate Players and Judges, draw another question and go again. With only two players, skip the Judge vote and move to the next question."
+    ],
+    "visual": "judges"
+  }
+];
+
 // Other activity guidance and Group printable logistics remain prototype examples.
 function variant(id: string, title: string, mode: Mode): Variant {
   const group = mode === 'group';
@@ -109,6 +160,10 @@ function variant(id: string, title: string, mode: Mode): Variant {
     files:[{id:'activity',title:'Team activity kit — Discussion Cards',href:'./packs/discussion-cards-home-pack.pdf',copies:'Each set: 2 PDF pages → 1 double-sided sheet → 8 cards',placeholder:false}],
     comingSoonFiles:['Facilitation Guide'],
     printing:'Use the same cards as the Home pack. For each set, print both PDF pages on ONE sheet, double-sided in landscape, flipping on the short edge. Fit both pages to the printable area using the same scaling. Test one plain-paper sheet for alignment, then cut after both sides are printed.',
+  };
+  if (id === 'five-minutes') return {
+    guidanceLabel:'DEBATE GUIDANCE', players:'2 or more players; extra participants judge the round', duration:'',
+    steps:standSteps, files, printing:'Final board, position pieces and question-card PDFs are still to be provided.',
   };
   return {players:group?'Example: 4–12 players in small teams':'Example: 1–3 players with an adult',duration:'Example: 20–30 minutes',printing:group?'Keep the facilitator resources separate. Confirm team numbers before printing.':'Keep each player’s workbook together. Confirm how many players need a copy.',files,steps:[
     {id:'welcome',title:`Prepare ${title}`,body:group?'This example uses shared team materials and an adult facilitator.':'This example uses a complete workbook and an adult helper.',items:[group?'Share one kit within each team.':'Give each player their own workbook.','All instructions here are placeholders awaiting author review.']},

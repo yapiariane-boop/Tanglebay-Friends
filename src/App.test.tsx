@@ -108,3 +108,25 @@ test('discussion carousel rotates on hover, pauses off hover and supports swipe 
     expect(screen.getByRole('button',{name:'Show Discussion Cards image 2 of 4'}).getAttribute('aria-pressed')).toBe('true');
   } finally {cleanup();vi.useRealTimers();}
 });
+
+test.each(['home','group'] as const)('5 Seconds for a Stand %s guidance covers judging order and final votes',async mode=>{
+  window.location.hash='/episodes/episode-1/activities/five-minutes';
+  render(<App/>);const user=userEvent.setup();
+  await user.click(screen.getByRole('button',{name:mode==='home'?/I’m playing at home/:/I’m playing with a group/}));
+  const variant=activities.find(a=>a.id==='five-minutes')!.variants[mode];
+  expect(variant.steps).toHaveLength(5);
+  for(let i=0;i<variant.steps.length;i++){
+    await screen.findByRole('heading',{level:1,name:variant.steps[i].title});
+    const visual=screen.getByRole('region',{name:'Visual guide'});
+    expect(visual.classList.contains(`visual-${variant.steps[i].visual}`)).toBe(true);
+    expect(visual.getAttribute('data-running')).toBe('false');
+    if(i===2)expect(screen.getByText(/They choose their own starting position before hearing either player’s argument/)).toBeTruthy();
+    if(i===3)expect(screen.getByText(/Both players may choose the same position/)).toBeTruthy();
+    if(i===4){
+      expect(screen.getByText(/Each final vote earns that player 1 point/)).toBeTruthy();
+      expect(screen.getByText(/An equal final vote count is also a draw/)).toBeTruthy();
+    }
+    await user.click(screen.getByRole('button',{name:i===4?/I’m Ready to Print/:/Next step/}));
+  }
+  await screen.findByRole('heading',{name:'You’re ready to print!'});
+});
