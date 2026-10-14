@@ -8,7 +8,8 @@ export const homepage: {
 export const logoArtwork = { src: './artwork/logo-crab.webp' };
 export const homeArtwork = { src: './artwork/scientist-home-transparent.webp', alt: 'A smiling Tanglebay scientist character in a white lab coat, raising a claw.' };
 export type Mode = 'home' | 'group';
-export interface Step { id: string; title: string; body: string; items?: string[] }
+export type GuidanceVisual = 'teams' | 'scene' | 'discuss' | 'refine' | 'flip';
+export interface Step { visual?: GuidanceVisual; id: string; title: string; body: string; items?: string[] }
 export interface PackFile { id: string; title: string; href: string; copies: string; optional?: boolean; placeholder?: boolean }
 export interface DuplexGuide { previews: {src:string; alt:string; label:string}[]; flipEdge: string; orientation:string; cards:number }
 export interface Variant { duplexGuide?: DuplexGuide; guidanceLabel?: string; players: string; duration: string; steps: Step[]; printing: string; files: PackFile[] }
@@ -53,7 +54,40 @@ const discussionHomeSteps: Step[] = [
   }
 ];
 
-// Other activity guidance and all printable logistics remain prototype examples.
+const discussionGroupSteps: Step[] = [
+  {
+    "id": "discussion-teams",
+    "title": "Form Your Discussion Teams",
+    "body": "Divide participants into small teams. Each team will discuss the same card and choose a spokesperson to share its ideas. Rotate spokespersons so everyone has a chance to contribute.",
+    "visual": "teams"
+  },
+  {
+    "id": "replay-scene",
+    "title": "Pick a Card & Replay the Scene",
+    "body": "Choose a card and revisit the scene using its page reference. Participants can reread it individually, read it aloud together or perform a short role-play. Keep the question hidden until everyone has finished revisiting the scene.",
+    "visual": "scene"
+  },
+  {
+    "id": "discuss-and-decide",
+    "title": "Read, Discuss & Decide",
+    "body": "The facilitator reads the first question aloud and starts a discussion timer. Teams exchange opinions, refer to the story and agree on the key points they want to share. Different interpretations are welcome.",
+    "visual": "discuss"
+  },
+  {
+    "id": "share-and-refine",
+    "title": "Share, Challenge & Refine",
+    "body": "When time is up, each team presents its response. The facilitator selects interesting answers to explore further, asking questions that encourage clearer explanations, stronger evidence and alternative perspectives. Teams may refine their views.",
+    "visual": "refine"
+  },
+  {
+    "id": "flip-and-repeat",
+    "title": "Flip the Card & Go Again",
+    "body": "Reveal the question on the back and repeat the discussion and sharing process. This time, prioritise teams whose answers were not explored earlier. Encourage new reasoning, then move to another card when ready.",
+    "visual": "flip"
+  }
+];
+
+// Other activity guidance and Group printable logistics remain prototype examples.
 function variant(id: string, title: string, mode: Mode): Variant {
   const group = mode === 'group';
   const files: PackFile[] = [{id:'activity',title: group ? 'Shared team activity kit' : 'Home activity workbook',href:`./packs/${id}-${mode}-activity.pdf`,copies:group?'Example: one kit per team':'Example: one workbook per player'}];
@@ -68,6 +102,10 @@ function variant(id: string, title: string, mode: Mode): Variant {
       {src:'./artwork/discussion-pack-preview-1.webp',alt:'Fronts of the eight discussion cards, with story scenes and questions.',label:'Page 1 · Front'},
       {src:'./artwork/discussion-pack-preview-2.webp',alt:'Matching backs of the eight discussion cards, with follow-up questions.',label:'Page 2 · Back'},
     ]},
+  };
+  if (id === 'discussion-cards' && mode === 'group') return {
+    guidanceLabel:'DISCUSSION GUIDANCE', players:'Small teams with a facilitator', duration:'',
+    steps:discussionGroupSteps, files, printing:'Final Group printable materials and copy counts are still to be provided.',
   };
   return {players:group?'Example: 4–12 players in small teams':'Example: 1–3 players with an adult',duration:'Example: 20–30 minutes',printing:group?'Keep the facilitator resources separate. Confirm team numbers before printing.':'Keep each player’s workbook together. Confirm how many players need a copy.',files,steps:[
     {id:'welcome',title:`Prepare ${title}`,body:group?'This example uses shared team materials and an adult facilitator.':'This example uses a complete workbook and an adult helper.',items:[group?'Share one kit within each team.':'Give each player their own workbook.','All instructions here are placeholders awaiting author review.']},

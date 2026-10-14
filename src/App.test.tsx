@@ -19,6 +19,18 @@ test('complete story-to-print journey for home and group',async()=>{
     for(let i=0;i<variant.steps.length;i++){
       await screen.findByText(`Step ${i+1} of ${variant.steps.length}`);
       expect(screen.queryByRole('link',{name:/Download PDF/})).toBeNull();
+      if(mode==='group') {
+        const visual=screen.getByRole('region',{name:'Visual guide'});
+        expect(visual.getAttribute('data-running')).toBe('false');
+        await user.click(screen.getByRole('button',{name:'Play animation'}));
+        expect(visual.getAttribute('data-running')).toBe('true');
+        const hidden=vi.spyOn(document,'hidden','get').mockReturnValue(true);
+        fireEvent(document,new Event('visibilitychange'));
+        expect(visual.getAttribute('data-running')).toBe('false');
+        hidden.mockRestore();fireEvent(document,new Event('visibilitychange'));
+        await user.click(screen.getByRole('button',{name:'Pause animation'}));
+        expect(visual.getAttribute('data-running')).toBe('false');
+      }
       await user.click(screen.getByRole('button',{name:i===variant.steps.length-1?/I’m Ready to Print/:/Next step/}));
     }
     await screen.findByRole('heading',{name:'You’re ready to print!'});
