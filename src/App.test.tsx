@@ -232,4 +232,13 @@ test.each([
     if(i===4)expect(within(preparation).getByText('Completed')).toBeTruthy();
   }
   await screen.findByRole('heading',{name:'You’re ready to print!'});
+  if(id==='officers-investigation'){
+    expect(screen.getByRole('heading',{name:'Team Kit'})).toBeTruthy();
+    expect(screen.getByRole('heading',{name:'Facilitator File'})).toBeTruthy();
+    expect(document.querySelectorAll('.file-card')).toHaveLength(2);
+    expect(screen.queryByRole('heading',{name:'Evidence materials'})).toBeNull();
+    const facilitatorCard=screen.getByRole('heading',{name:'Facilitator File'}).closest('article')!;
+    expect(within(facilitatorCard).getByText('COMING SOON')).toBeTruthy();
+    expect(within(facilitatorCard).queryByRole('link')).toBeNull();
+  }
 });

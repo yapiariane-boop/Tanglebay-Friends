@@ -56,3 +56,5 @@ The Wild Path has two stacked guidance sections for both Home and Group: Prepare
 The Wild Path Home and Group packs share the unmodified eight-page author PDF `public/packs/the-wild-path-home-pack.pdf` (about 29 MB). It is a download link, not an embedded viewer or a preloaded document. The print screen lists its components and notes the large mixed custom page sizes. The Facilitation Guide is marked Coming soon.
 
 Inside Dimitri’s Lab and Officer’s Investigation Notebook also use two stacked five-step guidance sections for both Home and Group. Their preparation and gameplay texts are explicit placeholders awaiting author content, with independent variant data and the same sequential print readiness as The Wild Path. Existing printable placeholder files are retained.
+
+Officer’s Investigation Notebook reserves two print areas in both setups: Team Kit and Facilitator File. The kit is still a labelled demonstration PDF; the facilitator area is Coming soon until the author supplies its separate PDF. Earlier example evidence and guide downloads are not presented as additional packs.
