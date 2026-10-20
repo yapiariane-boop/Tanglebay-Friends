@@ -278,6 +278,49 @@ const wildPathGroupPreparation: Step[] = [
   }
 ];
 
+const wildPathGroupGameplay: Step[] = [
+  {
+    "id": "group-choose-leader",
+    "title": "Choose Your Team Leader",
+    "lead": "Meet your new teammates and discover the characters on your team.",
+    "body": "Choose one character to be your Team Leader.\nCut out that character’s token and place it at the start of the Wild Path. This is the token your whole team will move around the board.",
+    "closing": "But remember: every character on your team can help solve challenges."
+  },
+  {
+    "id": "group-roll-and-move",
+    "title": "Roll, Move & Follow the Path",
+    "lead": "Choose your first Roller and let the adventure begin!",
+    "body": "Roll the dice and move your Team Leader the number of spaces shown.\nFollow the instruction on the space where you land.\nMisery or Bonus? Check the Misery & Bonuses Map.\nChallenge? Check the Challenge Map. Your team has a problem to solve!",
+    "closing": "Rotate the Roller each turn so everyone gets a chance to roll and move the team."
+  },
+  {
+    "id": "group-good-pick",
+    "title": "Find a Good Pick",
+    "lead": "Read the challenge and decide which character could handle it best.",
+    "body": "Check the Good Picks listed for that challenge.\nHave one of them on your team? The player holding that Character Card explains how their character’s ability could solve the problem.\nA Good Pick isn’t an automatic win. You still need to explain your reasoning!",
+    "closing": "If it makes sense, you’ve solved the challenge."
+  },
+  {
+    "id": "group-creative-solution",
+    "title": "Or Get Creative!",
+    "lead": "No Good Pick on your team? Find another way through!",
+    "body": "Use one or more of your team’s characters to invent a Creative Solution.\nIf several characters are involved, their players can work together to explain how their abilities combine.\nThe other players or Judges decide whether the solution is convincing.",
+    "closing": "If they agree, your Creative Solution succeeds!"
+  },
+  {
+    "id": "group-challenge-outcome",
+    "title": "Succeed, Stay & Keep Going",
+    "lead": "Now find out what happens to your team.",
+    "body": "",
+    "items": [
+      "Challenge succeeded? Move your Team Leader forward one extra space.",
+      "Challenge failed? Stay on the Challenge space. When your next turn comes, roll the dice again and continue from there.",
+      "Then rotate the Roller and keep playing."
+    ],
+    "closing": "The first team to reach the end of the Wild Path wins!"
+  }
+];
+
 // Other activity guidance and Group printable logistics remain prototype examples.
 function variant(id: string, title: string, mode: Mode): Variant {
   const group = mode === 'group';
@@ -312,7 +355,7 @@ function variant(id: string, title: string, mode: Mode): Variant {
   if (id === 'wild-path') {
     const guidanceSections: GuidanceSection[] = [
       {id:'preparation',title:'Prepare the Game',description:'Five steps to get everything ready.',placeholder:false,steps:group?wildPathGroupPreparation:wildPathHomePreparation},
-      {id:'gameplay',placeholder:group,title:'How to Play',description:'Five steps to understand the gameplay.',steps:group?Array.from({length:5},(_,i)=>({id:`play-${i+1}`,title:`Gameplay step ${i+1}`,body:'Gameplay instructions will be added here.'})):wildPathHomeGameplay},
+      {id:'gameplay',placeholder:false,title:'How to Play',description:'Five steps to understand the gameplay.',steps:group?wildPathGroupGameplay:wildPathHomeGameplay},
     ];
     return {guidanceSections, guidanceLabel:'ACTIVITY GUIDE',players:group?'One team per table; one Character Card per player':'Each player leads a team of 4 characters',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files:[{id:'activity',title:group?'Team activity kit — The Wild Path':'The Wild Path — Home pack',href:'./packs/the-wild-path-home-pack.pdf',copies:group?'One 8-page pack per team · approx. 29 MB':'8 pages · approx. 29 MB · board, Character Cards, reference maps, tokens and Chunky Dice',placeholder:false,pageCount:8}],comingSoonFiles:group?['Facilitation Guide']:undefined,printing:'The pack includes the board (page 1), Challenge Map (page 2), tokens (page 3), Chunky Dice (page 4), Misery & Bonuses Map (page 5), and Character Cards (pages 6–8). The PDF uses large custom page sizes: check your paper size and scaling in print preview before printing. Keep both reference maps readable. Use a regular die if you prefer to skip the dice craft.'};
   }

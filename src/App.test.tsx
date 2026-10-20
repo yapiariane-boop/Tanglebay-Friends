@@ -177,7 +177,18 @@ test.each(['home','group'] as const)('Wild Path %s has stacked preparation and g
     if(mode==='group'&&i===1)expect(screen.getByText('Don’t assign the teams yet. The players will discover them themselves.')).toBeTruthy();
     if(mode==='group'&&i===3)expect(screen.getByText('Prepare one playing table for each team, with one game board and both reference maps.')).toBeTruthy();
     if(mode==='group'&&i===4)expect(screen.getByText('At the shared draw station, each player draws one folded Team ID and one random Character Card.')).toBeTruthy();
-    if(mode==='group'&&i===5)expect(within(gameplay).getByText('Gameplay instructions will be added here.')).toBeTruthy();
+    if(mode==='group'&&i===5){
+      expect(within(gameplay).getByText('Meet your new teammates and discover the characters on your team.')).toBeTruthy();
+      expect(within(gameplay).queryByText('CONTENT PLACEHOLDER')).toBeNull();
+    }
+    if(mode==='group'&&i===6)expect(screen.getByText('Rotate the Roller each turn so everyone gets a chance to roll and move the team.')).toBeTruthy();
+    if(mode==='group'&&i===7)expect(screen.getByText(/The player holding that Character Card explains how their character’s ability could solve the problem/)).toBeTruthy();
+    if(mode==='group'&&i===8)expect(screen.getByText('If they agree, your Creative Solution succeeds!')).toBeTruthy();
+    if(mode==='group'&&i===9){
+      expect(screen.getByText('Challenge succeeded? Move your Team Leader forward one extra space.')).toBeTruthy();
+      expect(screen.getByText('Challenge failed? Stay on the Challenge space. When your next turn comes, roll the dice again and continue from there.')).toBeTruthy();
+      expect(screen.getByText('The first team to reach the end of the Wild Path wins!')).toBeTruthy();
+    }
     if(mode==='home'&&i===5){
       expect(screen.getByText('Each player randomly draws 4 Character Cards.')).toBeTruthy();
       expect(within(gameplay).queryByText('CONTENT PLACEHOLDER')).toBeNull();
