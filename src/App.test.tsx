@@ -168,11 +168,16 @@ test.each(['home','group'] as const)('Wild Path %s has stacked preparation and g
     expect(screen.getByText('Print the game board, Character Cards, Challenge Map, Misery & Bonuses Map, tokens and Tanglebay Chunky Dice.')).toBeTruthy();
     expect(within(preparation).queryByText('CONTENT PLACEHOLDER')).toBeNull();
   }else{
-    expect(within(preparation).getByText('Preparation instructions will be added here.')).toBeTruthy();
+    expect(within(preparation).getByText('Print one 8-page Wild Path Pack for each team.')).toBeTruthy();
+    expect(within(preparation).queryByText('CONTENT PLACEHOLDER')).toBeNull();
   }
   for(let i=0;i<10;i++){
     await screen.findByRole('heading',{level:3,name:variant.steps[i].title});
     if(mode==='home'&&i===4)expect(screen.getByText('Now it’s time to build your teams.')).toBeTruthy();
+    if(mode==='group'&&i===1)expect(screen.getByText('Don’t assign the teams yet. The players will discover them themselves.')).toBeTruthy();
+    if(mode==='group'&&i===3)expect(screen.getByText('Prepare one playing table for each team, with one game board and both reference maps.')).toBeTruthy();
+    if(mode==='group'&&i===4)expect(screen.getByText('At the shared draw station, each player draws one folded Team ID and one random Character Card.')).toBeTruthy();
+    if(mode==='group'&&i===5)expect(within(gameplay).getByText('Gameplay instructions will be added here.')).toBeTruthy();
     if(mode==='home'&&i===5){
       expect(screen.getByText('Each player randomly draws 4 Character Cards.')).toBeTruthy();
       expect(within(gameplay).queryByText('CONTENT PLACEHOLDER')).toBeNull();

@@ -243,6 +243,41 @@ const wildPathHomeGameplay: Step[] = [
   }
 ];
 
+const wildPathGroupPreparation: Step[] = [
+  {
+    "id": "group-print-adventure",
+    "title": "Print Your Adventure",
+    "lead": "Print one 8-page Wild Path Pack for each team.",
+    "body": "Each pack contains the materials needed to play, including the game board, Character Cards, Challenge Map, Misery & Bonuses Map, character tokens and Tanglebay Chunky Dice.\nYou’ll also need a few small pieces of paper to create the Team IDs."
+  },
+  {
+    "id": "create-team-ids",
+    "title": "Create the Team IDs",
+    "lead": "Choose a simple code for each team: colours, numbers, symbols… anything easy to match!",
+    "body": "Write each Team ID on small pieces of paper, making enough matching IDs for the number of players you want in each team.\nFold them so the codes stay hidden and place them in a container beside the Character Card deck at the shared draw station.",
+    "closing": "Don’t assign the teams yet. The players will discover them themselves."
+  },
+  {
+    "id": "group-prepare-game",
+    "title": "Prepare the Game",
+    "lead": "Cut out the Character Cards, character tokens and Tanglebay Chunky Dice.",
+    "body": "Shuffle the Character Cards and place them face down at the shared draw station, beside the folded Team IDs.\nBuild the Chunky Dice, or use regular dice if you already have some available.\nThen place the Challenge Map and Misery & Bonuses Map where they will be easy to read during play."
+  },
+  {
+    "id": "group-set-up-path",
+    "title": "Set Up the Wild Path",
+    "lead": "Prepare one playing table for each team, with one game board and both reference maps.",
+    "body": "We recommend gently taping the edges of each board to the table. This keeps it flat and makes it easier for children to slide their tokens along the path.\nKeep each team’s reference maps nearby."
+  },
+  {
+    "id": "discover-team",
+    "title": "Draw, Reveal & Find Your Team",
+    "lead": "At the shared draw station, each player draws one folded Team ID and one random Character Card.",
+    "body": "Once everyone has both, reveal your Team IDs and find the players with the same code.\nGather at your team’s table.",
+    "closing": "Then reveal your Character Cards and meet your new Wild Path team!"
+  }
+];
+
 // Other activity guidance and Group printable logistics remain prototype examples.
 function variant(id: string, title: string, mode: Mode): Variant {
   const group = mode === 'group';
@@ -276,10 +311,10 @@ function variant(id: string, title: string, mode: Mode): Variant {
   };
   if (id === 'wild-path') {
     const guidanceSections: GuidanceSection[] = [
-      {id:'preparation',title:'Prepare the Game',description:'Five steps to get everything ready.',placeholder:group,steps:group?Array.from({length:5},(_,i)=>({id:`prepare-${i+1}`,title:`Preparation step ${i+1}`,body:'Preparation instructions will be added here.'})):wildPathHomePreparation},
+      {id:'preparation',title:'Prepare the Game',description:'Five steps to get everything ready.',placeholder:false,steps:group?wildPathGroupPreparation:wildPathHomePreparation},
       {id:'gameplay',placeholder:group,title:'How to Play',description:'Five steps to understand the gameplay.',steps:group?Array.from({length:5},(_,i)=>({id:`play-${i+1}`,title:`Gameplay step ${i+1}`,body:'Gameplay instructions will be added here.'})):wildPathHomeGameplay},
     ];
-    return {guidanceSections, guidanceLabel:group?'CONTENT PLACEHOLDER':'ACTIVITY GUIDE',players:group?'Group setup details coming soon':'Each player leads a team of 4 characters',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files:[{id:'activity',title:group?'Team activity kit — The Wild Path':'The Wild Path — Home pack',href:'./packs/the-wild-path-home-pack.pdf',copies:'8 pages · approx. 29 MB · board, Character Cards, reference maps, tokens and Chunky Dice',placeholder:false,pageCount:8}],comingSoonFiles:group?['Facilitation Guide']:undefined,printing:'The pack includes the board (page 1), Challenge Map (page 2), tokens (page 3), Chunky Dice (page 4), Misery & Bonuses Map (page 5), and Character Cards (pages 6–8). The PDF uses large custom page sizes: check your paper size and scaling in print preview before printing. Keep both reference maps readable. Use a regular die if you prefer to skip the dice craft.'};
+    return {guidanceSections, guidanceLabel:'ACTIVITY GUIDE',players:group?'One team per table; one Character Card per player':'Each player leads a team of 4 characters',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files:[{id:'activity',title:group?'Team activity kit — The Wild Path':'The Wild Path — Home pack',href:'./packs/the-wild-path-home-pack.pdf',copies:group?'One 8-page pack per team · approx. 29 MB':'8 pages · approx. 29 MB · board, Character Cards, reference maps, tokens and Chunky Dice',placeholder:false,pageCount:8}],comingSoonFiles:group?['Facilitation Guide']:undefined,printing:'The pack includes the board (page 1), Challenge Map (page 2), tokens (page 3), Chunky Dice (page 4), Misery & Bonuses Map (page 5), and Character Cards (pages 6–8). The PDF uses large custom page sizes: check your paper size and scaling in print preview before printing. Keep both reference maps readable. Use a regular die if you prefer to skip the dice craft.'};
   }
   return {players:group?'Example: 4–12 players in small teams':'Example: 1–3 players with an adult',duration:'Example: 20–30 minutes',printing:group?'Keep the facilitator resources separate. Confirm team numbers before printing.':'Keep each player’s workbook together. Confirm how many players need a copy.',files,steps:[
     {id:'welcome',title:`Prepare ${title}`,body:group?'This example uses shared team materials and an adult facilitator.':'This example uses a complete workbook and an adult helper.',items:[group?'Share one kit within each team.':'Give each player their own workbook.','All instructions here are placeholders awaiting author review.']},
