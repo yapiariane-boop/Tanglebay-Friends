@@ -203,6 +203,46 @@ const wildPathHomePreparation: Step[] = [
   }
 ];
 
+const wildPathHomeGameplay: Step[] = [
+  {
+    "id": "meet-team",
+    "title": "Meet Your Team",
+    "lead": "Each player randomly draws 4 Character Cards.",
+    "body": "These four Tanglebay characters are your team for the entire journey.\nStudy their abilities carefully. You never know which one might save you later."
+  },
+  {
+    "id": "choose-leader",
+    "title": "Choose Your Team Leader",
+    "lead": "Choose one of your four characters to represent your team on the board.",
+    "body": "Cut out that character’s token and place it at the start of the Wild Path.",
+    "closing": "Your Team Leader is your playing token, but all four members of your team can help you solve challenges."
+  },
+  {
+    "id": "roll-and-move",
+    "title": "Roll, Move & Follow the Path",
+    "lead": "Take turns rolling the dice and move your Team Leader the number of spaces shown.",
+    "body": "Follow the instruction on the space where you land.\nIf you encounter a Misery or Bonus, check the Misery & Bonuses Map.\nIf you encounter a Challenge, it’s time to put your team to work."
+  },
+  {
+    "id": "face-challenge",
+    "title": "Face a Challenge",
+    "lead": "Read your challenge on the Challenge Map and decide which team member could handle it best.",
+    "body": "If your chosen character is listed among the Good Picks, explain why their ability would help.\nIf your reasoning makes sense, you’ve solved the challenge. Follow the Challenge Map and continue your journey.",
+    "closing": "Being a Good Pick doesn’t replace the explanation. You still have to connect the character’s ability to the problem."
+  },
+  {
+    "id": "creative-solutions",
+    "title": "Get Creative & Keep Moving!",
+    "lead": "No Good Pick on your team? Get creative!",
+    "body": "Combine the abilities of one or more team members to invent a solution. Explain your strategy and let the other players decide whether it works.\nHere’s what happens next:",
+    "items": [
+      "Challenge succeeded? Move forward one space.",
+      "Challenge failed? Stay on your current space until your next turn, when you can roll the dice again."
+    ],
+    "closing": "Keep taking turns until someone reaches the end of the Wild Path!"
+  }
+];
+
 // Other activity guidance and Group printable logistics remain prototype examples.
 function variant(id: string, title: string, mode: Mode): Variant {
   const group = mode === 'group';
@@ -237,9 +277,9 @@ function variant(id: string, title: string, mode: Mode): Variant {
   if (id === 'wild-path') {
     const guidanceSections: GuidanceSection[] = [
       {id:'preparation',title:'Prepare the Game',description:'Five steps to get everything ready.',placeholder:group,steps:group?Array.from({length:5},(_,i)=>({id:`prepare-${i+1}`,title:`Preparation step ${i+1}`,body:'Preparation instructions will be added here.'})):wildPathHomePreparation},
-      {id:'gameplay',placeholder:true,title:'How to Play',description:'Five steps to understand the gameplay.',steps:Array.from({length:5},(_,i)=>({id:`play-${i+1}`,title:`Gameplay step ${i+1}`,body:'Gameplay instructions will be added here.'}))},
+      {id:'gameplay',placeholder:group,title:'How to Play',description:'Five steps to understand the gameplay.',steps:group?Array.from({length:5},(_,i)=>({id:`play-${i+1}`,title:`Gameplay step ${i+1}`,body:'Gameplay instructions will be added here.'})):wildPathHomeGameplay},
     ];
-    return {guidanceSections, guidanceLabel:'CONTENT PLACEHOLDER',players:group?'Group setup details coming soon':'Home setup details coming soon',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files,printing:'Printing instructions will be added with the final activity materials.'};
+    return {guidanceSections, guidanceLabel:group?'CONTENT PLACEHOLDER':'ACTIVITY GUIDE',players:group?'Group setup details coming soon':'Each player leads a team of 4 characters',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files,printing:'Printing instructions will be added with the final activity materials.'};
   }
   return {players:group?'Example: 4–12 players in small teams':'Example: 1–3 players with an adult',duration:'Example: 20–30 minutes',printing:group?'Keep the facilitator resources separate. Confirm team numbers before printing.':'Keep each player’s workbook together. Confirm how many players need a copy.',files,steps:[
     {id:'welcome',title:`Prepare ${title}`,body:group?'This example uses shared team materials and an adult facilitator.':'This example uses a complete workbook and an adult helper.',items:[group?'Share one kit within each team.':'Give each player their own workbook.','All instructions here are placeholders awaiting author review.']},

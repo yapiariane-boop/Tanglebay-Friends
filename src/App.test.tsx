@@ -161,8 +161,8 @@ test.each(['home','group'] as const)('Wild Path %s has stacked preparation and g
   const preparation=await screen.findByRole('region',{name:'Prepare the Game'});
   const gameplay=screen.getByRole('region',{name:'How to Play'});
   expect(within(within(preparation).getByRole('list',{name:'Prepare the Game steps'})).getAllByRole('button')).toHaveLength(5);
-  expect(within(gameplay).getAllByRole('button',{name:/Gameplay step/})).toHaveLength(5);
-  expect(within(gameplay).getByRole('button',{name:/Gameplay step 1/}).hasAttribute('disabled')).toBe(true);
+  expect(within(within(gameplay).getByRole('list',{name:'How to Play steps'})).getAllByRole('button')).toHaveLength(5);
+  expect(within(within(gameplay).getByRole('list',{name:'How to Play steps'})).getAllByRole('button')[0].hasAttribute('disabled')).toBe(true);
   const variant=activities.find(a=>a.id==='wild-path')!.variants[mode];
   if(mode==='home'){
     expect(screen.getByText('Print the game board, Character Cards, Challenge Map, Misery & Bonuses Map, tokens and Tanglebay Chunky Dice.')).toBeTruthy();
@@ -173,6 +173,14 @@ test.each(['home','group'] as const)('Wild Path %s has stacked preparation and g
   for(let i=0;i<10;i++){
     await screen.findByRole('heading',{level:3,name:variant.steps[i].title});
     if(mode==='home'&&i===4)expect(screen.getByText('Now it’s time to build your teams.')).toBeTruthy();
+    if(mode==='home'&&i===5){
+      expect(screen.getByText('Each player randomly draws 4 Character Cards.')).toBeTruthy();
+      expect(within(gameplay).queryByText('CONTENT PLACEHOLDER')).toBeNull();
+    }
+    if(mode==='home'&&i===9){
+      expect(screen.getByText('Challenge succeeded? Move forward one space.')).toBeTruthy();
+      expect(screen.getByText('Challenge failed? Stay on your current space until your next turn, when you can roll the dice again.')).toBeTruthy();
+    }
     if(i<9)expect(screen.queryByRole('button',{name:/I’m Ready to Print/})).toBeNull();
     await user.click(screen.getByRole('button',{name:i===9?/I’m Ready to Print/:i===4?/Continue to How to Play/:/Next step/}));
     if(i===4){

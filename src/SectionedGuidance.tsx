@@ -22,7 +22,7 @@ export default function SectionedGuidance({sections,current,reached,onSelect,onN
         const index=start+j;
         return <li key={item.id}><button type="button" disabled={index>reached} aria-current={index===current?'step':undefined} onClick={()=>onSelect(index)}><span>{index<reached?'✓':j+1}</span>{item.title}</button></li>;
       })}</ol>
-      {step&&<article className="section-step-content"><p className="eyebrow">{section.placeholder===false?'ACTIVITY GUIDE':'CONTENT PLACEHOLDER'}</p><h3>{step.title}</h3>{step.lead&&<p className="section-step-lead"><strong>{step.lead}</strong></p>}<p className="section-step-body">{step.body}</p>{step.closing&&<p><strong>{step.closing}</strong></p>}<div className="actions"><button type="button" className="secondary" onClick={onPrevious}>{current===0?'Change play setup':'Previous step'}</button><button type="button" className="button" onClick={onNext}>{nextLabel} <span aria-hidden="true">→</span></button></div></article>}
+      {step&&<article className="section-step-content"><p className="eyebrow">{section.placeholder===false?'ACTIVITY GUIDE':'CONTENT PLACEHOLDER'}</p><h3>{step.title}</h3>{step.lead&&<p className="section-step-lead"><strong>{step.lead}</strong></p>}<p className="section-step-body">{step.body}</p>{step.items&&<ul className="section-step-items">{step.items.map(item=><li key={item}>{item}</li>)}</ul>}{step.closing&&<p><strong>{step.closing}</strong></p>}<div className="actions"><button type="button" className="secondary" onClick={onPrevious}>{current===0?'Change play setup':'Previous step'}</button><button type="button" className="button" onClick={onNext}>{nextLabel} <span aria-hidden="true">→</span></button></div></article>}
     </section>;
   })}</div>;
 }
