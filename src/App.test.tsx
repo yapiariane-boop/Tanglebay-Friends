@@ -239,11 +239,14 @@ test.each([
       if(i===5){
         expect(within(gameplay).queryByText('CONTENT PLACEHOLDER')).toBeNull();
         expect(screen.getByText('What is evidence, and what are we only assuming?')).toBeTruthy();
+        expect(screen.getByText(/The case begins with a live interview with the victim/)).toBeTruthy();
       }
       if(i===6)expect(screen.getByText(/each tool can only be used once during the case/)).toBeTruthy();
       if(i===7){
-        expect(screen.getByText('We would use it by…')).toBeTruthy();
-        expect(screen.getByText(/Keep your team’s choice private until it’s time to reveal it/)).toBeTruthy();
+        expect(screen.getByText('We used it by…')).toBeTruthy();
+        expect(screen.getByText('This helped because…')).toBeTruthy();
+        expect(screen.getByText('Choose one tool, cut it out and glue it onto your team’s Officer Hat.')).toBeTruthy();
+        expect(screen.getByText(/Once the situation is solved and your explanation is complete, move on to the next scene and its interview/)).toBeTruthy();
       }
       if(i===8)expect(screen.getByText('What could suggest they are innocent?')).toBeTruthy();
       if(i===9){
@@ -258,6 +261,7 @@ test.each([
   }
   await screen.findByRole('heading',{name:'You’re ready to print!'});
   if(id==='officers-investigation'){
+    if(mode==='group')expect(screen.getByText('Print-heavy: 22 pages per team · one shared investigation notebook')).toBeTruthy();
     expect(screen.getByRole('heading',{name:'Team Kit'})).toBeTruthy();
     expect(screen.getByRole('heading',{name:'Facilitator File'})).toBeTruthy();
     expect(document.querySelectorAll('.file-card')).toHaveLength(2);

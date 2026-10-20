@@ -13,7 +13,7 @@ export interface Step { prompts?:string[]; after?:string; lead?:string; closing?
 export interface GuidanceSection { placeholder?:boolean; id:string; title:string; description:string; steps:Step[] }
 export interface PackFile { id: string; title: string; href: string; copies: string; optional?: boolean; placeholder?: boolean; pageCount?: number }
 export interface DuplexGuide { previews: {src:string; alt:string; label:string}[]; flipEdge: string; orientation:string; cards:number }
-export interface Variant { guidanceSections?: GuidanceSection[]; cubeAssembly?: {patternSrc:string;boardSrc:string}; comingSoonFiles?: string[]; duplexGuide?: DuplexGuide; guidanceLabel?: string; players: string; duration: string; steps: Step[]; printing: string; files: PackFile[] }
+export interface Variant { guidanceSections?: GuidanceSection[]; cubeAssembly?: {patternSrc:string;boardSrc:string}; comingSoonFiles?: string[]; duplexGuide?: DuplexGuide; guidanceLabel?: string; printNotice?: string; players: string; duration: string; steps: Step[]; printing: string; files: PackFile[] }
 export interface Activity { id: string; title: string; catchphrase: string; description: string; episodeIds: string[]; color: string; artwork: {src?: string; alt: string}; gallery?: {src: string; alt: string}[]; variants: Record<Mode, Variant> }
 export interface Episode {id: string; title: string; description: string; artwork?: {src: string; alt: string}; comingSoon?: boolean}
 export const episodes: Episode[] = [
@@ -326,7 +326,7 @@ const investigationGroupPreparation: Step[] = [
     "id": "print-investigation-packs",
     "title": "Print Your Investigation Packs",
     "lead": "Print one Group Investigation Pack for each Investigation Team.",
-    "body": "Each team will share its investigation materials throughout the case, including its Officer Hat, Equipment pieces, Challenge pages, Interview Notes, Suspect Files and Final Report.\nKeep the Facilitator materials and Actor Cards separate. You’ll need them to lead the investigation."
+    "body": "Print-heavy: 22 pages per team. The Team Kit is designed as a shared investigation notebook.\nEach team will share its investigation materials throughout the case, including its Officer Hat, Equipment pieces, Challenge pages, Interview Notes, Suspect Files and Final Report.\nKeep the Facilitator materials and Actor Cards separate. You’ll need them to lead the investigation."
   },
   {
     "id": "prepare-officer-kits",
@@ -361,7 +361,7 @@ const investigationGroupGameplay: Step[] = [
     "id": "enter-investigation-scene",
     "title": "Enter the Scene & Listen",
     "lead": "Follow Honey into the investigation.",
-    "body": "The facilitator introduces each new scene and performs the live interviews with the Character Actors.\nListen carefully.\nYour Evidence Recorder writes down the important information, then the whole team checks the notes together.\nAsk yourselves:",
+    "body": "The case begins with a live interview with the victim, led by the facilitator as Honey and a Character Actor. This first interview opens the investigation.\nAfter this opening interview, each new interview is unlocked by completing the situation that comes before it.\nListen carefully.\nYour Evidence Recorder writes down the important information, then the whole team checks the notes together.\nAsk yourselves:",
     "prompts": [
       "What did we actually learn?",
       "What is evidence, and what are we only assuming?"
@@ -371,20 +371,20 @@ const investigationGroupGameplay: Step[] = [
     "id": "investigation-challenge",
     "title": "Face the Investigation Challenge",
     "lead": "When Honey discovers a new problem, your team must decide how to investigate it.",
-    "body": "Read the Investigation Challenge together.\nDiscuss what you need to discover and which piece of Officer Equipment could help.",
+    "body": "After the opening interview, Honey presents your first situation. Read the Investigation Challenge together and decide how to solve it.\nDiscuss what you need to discover and which piece of Officer Equipment could help. You must complete this situation before accessing the next interview.",
     "closing": "Remember: each tool can only be used once during the case. Choose wisely. You might need the others later."
   },
   {
     "id": "choose-explain-equip",
-    "title": "Choose, Explain & Equip",
-    "lead": "Choose your equipment and explain your investigation strategy.",
-    "body": "Complete:",
+    "title": "Choose, Equip & Explain",
+    "lead": "Choose one tool, cut it out and glue it onto your team’s Officer Hat.",
+    "body": "Use your chosen tool to solve the situation, then complete the challenge sheet to explain your choice and how it helped.\nComplete:",
     "prompts": [
       "We chose…",
-      "We would use it by…",
+      "We used it by…",
       "This helped because…"
     ],
-    "after": "Keep your team’s choice private until it’s time to reveal it.\nThen add the selected Equipment piece to your Officer Hat.\nYour hat will keep track of the investigation choices you’ve made along the way."
+    "after": "Your hat keeps track of the tools you have already used. Each tool can only be used once.\nOnce the situation is solved and your explanation is complete, move on to the next scene and its interview."
   },
   {
     "id": "build-suspect-files",
@@ -397,7 +397,7 @@ const investigationGroupGameplay: Step[] = [
       "How strong is the evidence?"
     ],
     "after": "Don’t decide who’s guilty too quickly.\nA good Investigation Officer looks for evidence against a suspect AND evidence that could clear them.",
-    "closing": "Continue through the scenes, interviews and challenges until your suspect files are complete."
+    "closing": "After each interview, solve the next situation: choose one tool, cut and glue it onto the hat, then complete the explanation sheet to unlock the following interview. Keep adding evidence to your suspect files as the case unfolds."
   },
   {
     "id": "case-conference",
@@ -459,7 +459,7 @@ function variant(id: string, title: string, mode: Mode): Variant {
       {id:'preparation',title:'Prepare the Game',description:'Five steps to get everything ready.',placeholder:!authoredInvestigationGroup,steps:authoredInvestigationGroup?investigationGroupPreparation:Array.from({length:5},(_,i)=>({id:`prepare-${i+1}`,title:`Preparation step ${i+1}`,body:'Preparation instructions will be added here.'}))},
       {id:'gameplay',title:'How to Play',description:'Five steps to understand the gameplay.',placeholder:!authoredInvestigationGroup,steps:authoredInvestigationGroup?investigationGroupGameplay:Array.from({length:5},(_,i)=>({id:`play-${i+1}`,title:`Gameplay step ${i+1}`,body:'Gameplay instructions will be added here.'}))},
     ];
-    return {guidanceSections,guidanceLabel:authoredInvestigationGroup?'ACTIVITY GUIDE':'CONTENT PLACEHOLDER',players:authoredInvestigationGroup?'Small Investigation Teams with a facilitator':group?'Group setup details coming soon':'Home setup details coming soon',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files:id==='officers-investigation'?[{...files[0],title:'Team Kit',copies:group?'One Investigation Pack per team':files[0].copies}]:files,comingSoonFiles:id==='officers-investigation'?['Facilitator File']:undefined,printing:id==='officers-investigation'?'Keep the Facilitator File separate from the Team Kit. Final printing instructions and copy counts will be added when the files are ready.':'Printing instructions will be added with the final activity materials.'};
+    return {guidanceSections,printNotice:authoredInvestigationGroup?'Print-heavy: 22 pages per team. The Team Kit is a shared investigation notebook; facilitator materials are separate.':undefined,guidanceLabel:authoredInvestigationGroup?'ACTIVITY GUIDE':'CONTENT PLACEHOLDER',players:authoredInvestigationGroup?'Small Investigation Teams with a facilitator':group?'Group setup details coming soon':'Home setup details coming soon',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files:id==='officers-investigation'?[{...files[0],title:'Team Kit',copies:group?'Print-heavy: 22 pages per team · one shared investigation notebook':files[0].copies}]:files,comingSoonFiles:id==='officers-investigation'?['Facilitator File']:undefined,printing:authoredInvestigationGroup?'Print one 22-page Team Kit per Investigation Team. This print-heavy pack is designed as a shared investigation notebook. Keep the Facilitator File separate; facilitator printing details will be added when that file is ready.':id==='officers-investigation'?'Keep the Facilitator File separate from the Team Kit. Final printing instructions and copy counts will be added when the files are ready.':'Printing instructions will be added with the final activity materials.'};
   }
   return {players:group?'Example: 4–12 players in small teams':'Example: 1–3 players with an adult',duration:'Example: 20–30 minutes',printing:group?'Keep the facilitator resources separate. Confirm team numbers before printing.':'Keep each player’s workbook together. Confirm how many players need a copy.',files,steps:[
     {id:'welcome',title:`Prepare ${title}`,body:group?'This example uses shared team materials and an adult facilitator.':'This example uses a complete workbook and an adult helper.',items:[group?'Share one kit within each team.':'Give each player their own workbook.','All instructions here are placeholders awaiting author review.']},
