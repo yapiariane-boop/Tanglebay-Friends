@@ -189,4 +189,11 @@ test.each(['home','group'] as const)('Wild Path %s has stacked preparation and g
     }
   }
   await screen.findByRole('heading',{name:'You’re ready to print!'});
+  if(mode==='home'){
+    expect(screen.getByRole('link',{name:/Download PDF/}).getAttribute('href')).toBe('./packs/the-wild-path-home-pack.pdf');
+    expect(screen.getByText('PRINTABLE PDF · 8 PAGES')).toBeTruthy();
+    expect(screen.queryByText('Demonstration materials only')).toBeNull();
+  }else{
+    expect(screen.getByText('Demonstration materials only')).toBeTruthy();
+  }
 });
