@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import {afterEach, beforeEach, expect, test, vi} from 'vitest';
-import {act, cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {act, cleanup, fireEvent, render, screen, waitFor, within} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {existsSync} from 'node:fs';
 import App from './App';
@@ -152,4 +152,25 @@ test.each(['home','group'] as const)('5 Seconds for a Stand %s guidance covers j
   }else{
     expect(screen.queryByRole('region',{name:'Build your 3D button'})).toBeNull();
   }
+});
+
+test.each(['home','group'] as const)('Wild Path %s has stacked preparation and gameplay sections with five steps each',async mode=>{
+  window.location.hash='/episodes/episode-1/activities/wild-path';
+  render(<App/>);const user=userEvent.setup();
+  await user.click(screen.getByRole('button',{name:mode==='home'?/I’m playing at home/:/I’m playing with a group/}));
+  const preparation=await screen.findByRole('region',{name:'Prepare the Game'});
+  const gameplay=screen.getByRole('region',{name:'How to Play'});
+  expect(within(preparation).getAllByRole('button',{name:/Preparation step/})).toHaveLength(5);
+  expect(within(gameplay).getAllByRole('button',{name:/Gameplay step/})).toHaveLength(5);
+  expect(within(gameplay).getByRole('button',{name:/Gameplay step 1/}).hasAttribute('disabled')).toBe(true);
+  for(let i=0;i<10;i++){
+    await screen.findByRole('heading',{level:3,name:i<5?`Preparation step ${i+1}`:`Gameplay step ${i-4}`});
+    if(i<9)expect(screen.queryByRole('button',{name:/I’m Ready to Print/})).toBeNull();
+    await user.click(screen.getByRole('button',{name:i===9?/I’m Ready to Print/:i===4?/Continue to How to Play/:/Next step/}));
+    if(i===4){
+      expect(within(preparation).getByText('Completed')).toBeTruthy();
+      expect(within(gameplay).getByText('Step 1 of 5')).toBeTruthy();
+    }
+  }
+  await screen.findByRole('heading',{name:'You’re ready to print!'});
 });

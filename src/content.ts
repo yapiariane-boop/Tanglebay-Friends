@@ -10,9 +10,10 @@ export const homeArtwork = { src: './artwork/scientist-home-transparent.webp', a
 export type Mode = 'home' | 'group';
 export type GuidanceVisual = 'teams' | 'scene' | 'discuss' | 'refine' | 'flip' | 'opponent' | 'stand' | 'position' | 'case' | 'judges' | 'arena' | 'group-position' | 'group-judges' | 'questions';
 export interface Step { visual?: GuidanceVisual; id: string; title: string; body: string; items?: string[] }
+export interface GuidanceSection { id:string; title:string; description:string; steps:Step[] }
 export interface PackFile { id: string; title: string; href: string; copies: string; optional?: boolean; placeholder?: boolean; pageCount?: number }
 export interface DuplexGuide { previews: {src:string; alt:string; label:string}[]; flipEdge: string; orientation:string; cards:number }
-export interface Variant { cubeAssembly?: {patternSrc:string;boardSrc:string}; comingSoonFiles?: string[]; duplexGuide?: DuplexGuide; guidanceLabel?: string; players: string; duration: string; steps: Step[]; printing: string; files: PackFile[] }
+export interface Variant { guidanceSections?: GuidanceSection[]; cubeAssembly?: {patternSrc:string;boardSrc:string}; comingSoonFiles?: string[]; duplexGuide?: DuplexGuide; guidanceLabel?: string; players: string; duration: string; steps: Step[]; printing: string; files: PackFile[] }
 export interface Activity { id: string; title: string; catchphrase: string; description: string; episodeIds: string[]; color: string; artwork: {src?: string; alt: string}; gallery?: {src: string; alt: string}[]; variants: Record<Mode, Variant> }
 export interface Episode {id: string; title: string; description: string; artwork?: {src: string; alt: string}; comingSoon?: boolean}
 export const episodes: Episode[] = [
@@ -199,6 +200,13 @@ function variant(id: string, title: string, mode: Mode): Variant {
     comingSoonFiles:group?['Facilitation Guide']:undefined,
     printing:'Choose the flat or 3D version. For flat play, use the board on page 1 and the questions on page 5. For 3D pieces, also print pages 2–4, then cut and assemble the templates. Cut out the questions, fold them and mix them in a bowl.',
   };
+  if (id === 'wild-path') {
+    const guidanceSections: GuidanceSection[] = [
+      {id:'preparation',title:'Prepare the Game',description:'Five steps to get everything ready.',steps:Array.from({length:5},(_,i)=>({id:`prepare-${i+1}`,title:`Preparation step ${i+1}`,body:'Preparation instructions will be added here.'}))},
+      {id:'gameplay',title:'How to Play',description:'Five steps to understand the gameplay.',steps:Array.from({length:5},(_,i)=>({id:`play-${i+1}`,title:`Gameplay step ${i+1}`,body:'Gameplay instructions will be added here.'}))},
+    ];
+    return {guidanceSections, guidanceLabel:'CONTENT PLACEHOLDER',players:group?'Group setup details coming soon':'Home setup details coming soon',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files,printing:'Printing instructions will be added with the final activity materials.'};
+  }
   return {players:group?'Example: 4–12 players in small teams':'Example: 1–3 players with an adult',duration:'Example: 20–30 minutes',printing:group?'Keep the facilitator resources separate. Confirm team numbers before printing.':'Keep each player’s workbook together. Confirm how many players need a copy.',files,steps:[
     {id:'welcome',title:`Prepare ${title}`,body:group?'This example uses shared team materials and an adult facilitator.':'This example uses a complete workbook and an adult helper.',items:[group?'Share one kit within each team.':'Give each player their own workbook.','All instructions here are placeholders awaiting author review.']},
     {id:'materials',title:'Gather your materials',body:'Example preparation checklist — final materials will vary by activity.',items:['Printed materials from the final step','Pencils and scrap paper',id==='officers-investigation'?'Craft supplies chosen by an adult':'A clear space to play']},
