@@ -236,7 +236,21 @@ test.each([
       if(i===2)expect(screen.getByText('Keep the Character Actor Cards with the facilitator. Don’t give the interview scripts to the Investigation Teams.')).toBeTruthy();
       if(i===3)expect(screen.getByText(/Each team should choose its first Evidence Recorder/)).toBeTruthy();
       if(i===4)expect(screen.getByText('Honey has a new case. It’s time to open the investigation.')).toBeTruthy();
-      if(i===5)expect(within(gameplay).getByText('CONTENT PLACEHOLDER')).toBeTruthy();
+      if(i===5){
+        expect(within(gameplay).queryByText('CONTENT PLACEHOLDER')).toBeNull();
+        expect(screen.getByText('What is evidence, and what are we only assuming?')).toBeTruthy();
+      }
+      if(i===6)expect(screen.getByText(/each tool can only be used once during the case/)).toBeTruthy();
+      if(i===7){
+        expect(screen.getByText('We would use it by…')).toBeTruthy();
+        expect(screen.getByText(/Keep your team’s choice private until it’s time to reveal it/)).toBeTruthy();
+      }
+      if(i===8)expect(screen.getByText('What could suggest they are innocent?')).toBeTruthy();
+      if(i===9){
+        expect(screen.getByText('The main thing that made us hesitate was…')).toBeTruthy();
+        expect(screen.getByText(/You may reconsider your conclusion before locking in your final answer/)).toBeTruthy();
+        expect(screen.getByText('Then let Honey reveal what really happened. 🔎')).toBeTruthy();
+      }
     }
     if(i<9)expect(screen.queryByRole('button',{name:/I’m Ready to Print/})).toBeNull();
     await user.click(screen.getByRole('button',{name:i===9?/I’m Ready to Print/:i===4?/Continue to How to Play/:/Next step/}));
