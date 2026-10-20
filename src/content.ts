@@ -9,8 +9,8 @@ export const logoArtwork = { src: './artwork/logo-crab.webp' };
 export const homeArtwork = { src: './artwork/scientist-home-transparent.webp', alt: 'A smiling Tanglebay scientist character in a white lab coat, raising a claw.' };
 export type Mode = 'home' | 'group';
 export type GuidanceVisual = 'teams' | 'scene' | 'discuss' | 'refine' | 'flip' | 'opponent' | 'stand' | 'position' | 'case' | 'judges' | 'arena' | 'group-position' | 'group-judges' | 'questions';
-export interface Step { visual?: GuidanceVisual; id: string; title: string; body: string; items?: string[] }
-export interface GuidanceSection { id:string; title:string; description:string; steps:Step[] }
+export interface Step { lead?:string; closing?:string; visual?: GuidanceVisual; id: string; title: string; body: string; items?: string[] }
+export interface GuidanceSection { placeholder?:boolean; id:string; title:string; description:string; steps:Step[] }
 export interface PackFile { id: string; title: string; href: string; copies: string; optional?: boolean; placeholder?: boolean; pageCount?: number }
 export interface DuplexGuide { previews: {src:string; alt:string; label:string}[]; flipEdge: string; orientation:string; cards:number }
 export interface Variant { guidanceSections?: GuidanceSection[]; cubeAssembly?: {patternSrc:string;boardSrc:string}; comingSoonFiles?: string[]; duplexGuide?: DuplexGuide; guidanceLabel?: string; players: string; duration: string; steps: Step[]; printing: string; files: PackFile[] }
@@ -169,6 +169,40 @@ const standGroupSteps: Step[] = [
   },
 ];
 
+const wildPathHomePreparation: Step[] = [
+  {
+    "id": "print-adventure",
+    "title": "Print Your Adventure",
+    "lead": "Print the game board, Character Cards, Challenge Map, Misery & Bonuses Map, tokens and Tanglebay Chunky Dice.",
+    "body": "Keep the Challenge Map and Misery & Bonuses Map nearby. You’ll need to check them throughout the game."
+  },
+  {
+    "id": "character-deck",
+    "title": "Build Your Character Deck",
+    "lead": "Cut out all the Character Cards and shuffle them into one deck.",
+    "body": "Keep them face down for now.\nNo choosing favourites. The Wild Path will decide who’s joining your team. 👀"
+  },
+  {
+    "id": "prepare-dice",
+    "title": "Prepare Your Dice",
+    "lead": "Cut, fold and build your Tanglebay Chunky Dice.",
+    "body": "Already have a regular die at home? Use that instead and skip the craft.\nTanglebay bureaucracy has approved both methods. 💀"
+  },
+  {
+    "id": "set-up-path",
+    "title": "Set Up the Wild Path",
+    "lead": "Place the board in the centre of the table and keep both reference maps where everyone can read them.",
+    "body": "We recommend gently taping the edges of the board to the table.\nThis keeps it flat and makes moving your tokens much easier."
+  },
+  {
+    "id": "ready-for-teams",
+    "title": "You’re Ready",
+    "lead": "Bring everyone around the board and place the shuffled Character Cards nearby.",
+    "body": "Your Wild Path is ready.",
+    "closing": "Now it’s time to build your teams."
+  }
+];
+
 // Other activity guidance and Group printable logistics remain prototype examples.
 function variant(id: string, title: string, mode: Mode): Variant {
   const group = mode === 'group';
@@ -202,8 +236,8 @@ function variant(id: string, title: string, mode: Mode): Variant {
   };
   if (id === 'wild-path') {
     const guidanceSections: GuidanceSection[] = [
-      {id:'preparation',title:'Prepare the Game',description:'Five steps to get everything ready.',steps:Array.from({length:5},(_,i)=>({id:`prepare-${i+1}`,title:`Preparation step ${i+1}`,body:'Preparation instructions will be added here.'}))},
-      {id:'gameplay',title:'How to Play',description:'Five steps to understand the gameplay.',steps:Array.from({length:5},(_,i)=>({id:`play-${i+1}`,title:`Gameplay step ${i+1}`,body:'Gameplay instructions will be added here.'}))},
+      {id:'preparation',title:'Prepare the Game',description:'Five steps to get everything ready.',placeholder:group,steps:group?Array.from({length:5},(_,i)=>({id:`prepare-${i+1}`,title:`Preparation step ${i+1}`,body:'Preparation instructions will be added here.'})):wildPathHomePreparation},
+      {id:'gameplay',placeholder:true,title:'How to Play',description:'Five steps to understand the gameplay.',steps:Array.from({length:5},(_,i)=>({id:`play-${i+1}`,title:`Gameplay step ${i+1}`,body:'Gameplay instructions will be added here.'}))},
     ];
     return {guidanceSections, guidanceLabel:'CONTENT PLACEHOLDER',players:group?'Group setup details coming soon':'Home setup details coming soon',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files,printing:'Printing instructions will be added with the final activity materials.'};
   }

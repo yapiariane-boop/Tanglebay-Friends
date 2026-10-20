@@ -160,11 +160,19 @@ test.each(['home','group'] as const)('Wild Path %s has stacked preparation and g
   await user.click(screen.getByRole('button',{name:mode==='home'?/I’m playing at home/:/I’m playing with a group/}));
   const preparation=await screen.findByRole('region',{name:'Prepare the Game'});
   const gameplay=screen.getByRole('region',{name:'How to Play'});
-  expect(within(preparation).getAllByRole('button',{name:/Preparation step/})).toHaveLength(5);
+  expect(within(within(preparation).getByRole('list',{name:'Prepare the Game steps'})).getAllByRole('button')).toHaveLength(5);
   expect(within(gameplay).getAllByRole('button',{name:/Gameplay step/})).toHaveLength(5);
   expect(within(gameplay).getByRole('button',{name:/Gameplay step 1/}).hasAttribute('disabled')).toBe(true);
+  const variant=activities.find(a=>a.id==='wild-path')!.variants[mode];
+  if(mode==='home'){
+    expect(screen.getByText('Print the game board, Character Cards, Challenge Map, Misery & Bonuses Map, tokens and Tanglebay Chunky Dice.')).toBeTruthy();
+    expect(within(preparation).queryByText('CONTENT PLACEHOLDER')).toBeNull();
+  }else{
+    expect(within(preparation).getByText('Preparation instructions will be added here.')).toBeTruthy();
+  }
   for(let i=0;i<10;i++){
-    await screen.findByRole('heading',{level:3,name:i<5?`Preparation step ${i+1}`:`Gameplay step ${i-4}`});
+    await screen.findByRole('heading',{level:3,name:variant.steps[i].title});
+    if(mode==='home'&&i===4)expect(screen.getByText('Now it’s time to build your teams.')).toBeTruthy();
     if(i<9)expect(screen.queryByRole('button',{name:/I’m Ready to Print/})).toBeNull();
     await user.click(screen.getByRole('button',{name:i===9?/I’m Ready to Print/:i===4?/Continue to How to Play/:/Next step/}));
     if(i===4){
