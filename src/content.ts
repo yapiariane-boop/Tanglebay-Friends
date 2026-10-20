@@ -321,6 +321,41 @@ const wildPathGroupGameplay: Step[] = [
   }
 ];
 
+const investigationGroupPreparation: Step[] = [
+  {
+    "id": "print-investigation-packs",
+    "title": "Print Your Investigation Packs",
+    "lead": "Print one Group Investigation Pack for each Investigation Team.",
+    "body": "Each team will share its investigation materials throughout the case, including its Officer Hat, Equipment pieces, Challenge pages, Interview Notes, Suspect Files and Final Report.\nKeep the Facilitator materials and Actor Cards separate. You’ll need them to lead the investigation."
+  },
+  {
+    "id": "prepare-officer-kits",
+    "title": "Prepare the Officer Kits",
+    "lead": "Cut out one Officer Hat and one set of Officer Equipment for each team.",
+    "body": "Keep the Equipment pieces together and ready to use.\nDuring the investigation, teams will choose their equipment and add their selected tools to their shared Officer Hat.",
+    "closing": "Each piece of equipment can only be used once. Choose carefully!"
+  },
+  {
+    "id": "prepare-interviews",
+    "title": "Prepare the Interviews",
+    "lead": "Keep the Character Actor Cards with the facilitator. Don’t give the interview scripts to the Investigation Teams.",
+    "body": "The suspects will be interviewed live, and listening carefully is part of the investigation.\nYou can invite a different child to play each character while the facilitator guides the interview as Honey."
+  },
+  {
+    "id": "set-investigation-teams",
+    "title": "Set Up Your Investigation Teams",
+    "lead": "Divide the children into small Investigation Teams and give each team one Investigation Pack.",
+    "body": "Each team should choose its first Evidence Recorder, who will take notes during the interviews.\nOther responsibilities can rotate as the case progresses so everyone gets a chance to participate."
+  },
+  {
+    "id": "keep-case-secret",
+    "title": "Keep the Case Secret",
+    "lead": "Set aside anything the investigators shouldn’t see yet.",
+    "body": "Keep upcoming evidence, Actor Cards and the final case reveal with the facilitator until the investigation reaches them.\nPlace each team around its Investigation Pack, grab some pencils and get ready.",
+    "closing": "Honey has a new case. It’s time to open the investigation."
+  }
+];
+
 // Other activity guidance and Group printable logistics remain prototype examples.
 function variant(id: string, title: string, mode: Mode): Variant {
   const group = mode === 'group';
@@ -360,11 +395,12 @@ function variant(id: string, title: string, mode: Mode): Variant {
     return {guidanceSections, guidanceLabel:'ACTIVITY GUIDE',players:group?'One team per table; one Character Card per player':'Each player leads a team of 4 characters',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files:[{id:'activity',title:group?'Team activity kit — The Wild Path':'The Wild Path — Home pack',href:'./packs/the-wild-path-home-pack.pdf',copies:group?'One 8-page pack per team · approx. 29 MB':'8 pages · approx. 29 MB · board, Character Cards, reference maps, tokens and Chunky Dice',placeholder:false,pageCount:8}],comingSoonFiles:group?['Facilitation Guide']:undefined,printing:'The pack includes the board (page 1), Challenge Map (page 2), tokens (page 3), Chunky Dice (page 4), Misery & Bonuses Map (page 5), and Character Cards (pages 6–8). The PDF uses large custom page sizes: check your paper size and scaling in print preview before printing. Keep both reference maps readable. Use a regular die if you prefer to skip the dice craft.'};
   }
   if (id === 'dimitris-lab' || id === 'officers-investigation') {
+    const authoredInvestigationPreparation=id==='officers-investigation'&&group;
     const guidanceSections: GuidanceSection[] = [
-      {id:'preparation',title:'Prepare the Game',description:'Five steps to get everything ready.',placeholder:true,steps:Array.from({length:5},(_,i)=>({id:`prepare-${i+1}`,title:`Preparation step ${i+1}`,body:'Preparation instructions will be added here.'}))},
+      {id:'preparation',title:'Prepare the Game',description:'Five steps to get everything ready.',placeholder:!authoredInvestigationPreparation,steps:authoredInvestigationPreparation?investigationGroupPreparation:Array.from({length:5},(_,i)=>({id:`prepare-${i+1}`,title:`Preparation step ${i+1}`,body:'Preparation instructions will be added here.'}))},
       {id:'gameplay',title:'How to Play',description:'Five steps to understand the gameplay.',placeholder:true,steps:Array.from({length:5},(_,i)=>({id:`play-${i+1}`,title:`Gameplay step ${i+1}`,body:'Gameplay instructions will be added here.'}))},
     ];
-    return {guidanceSections,guidanceLabel:'CONTENT PLACEHOLDER',players:group?'Group setup details coming soon':'Home setup details coming soon',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files:id==='officers-investigation'?[{...files[0],title:'Team Kit'}]:files,comingSoonFiles:id==='officers-investigation'?['Facilitator File']:undefined,printing:id==='officers-investigation'?'Keep the Facilitator File separate from the Team Kit. Final printing instructions and copy counts will be added when the files are ready.':'Printing instructions will be added with the final activity materials.'};
+    return {guidanceSections,guidanceLabel:authoredInvestigationPreparation?'ACTIVITY GUIDE':'CONTENT PLACEHOLDER',players:authoredInvestigationPreparation?'Small Investigation Teams with a facilitator':group?'Group setup details coming soon':'Home setup details coming soon',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files:id==='officers-investigation'?[{...files[0],title:'Team Kit',copies:group?'One Investigation Pack per team':files[0].copies}]:files,comingSoonFiles:id==='officers-investigation'?['Facilitator File']:undefined,printing:id==='officers-investigation'?'Keep the Facilitator File separate from the Team Kit. Final printing instructions and copy counts will be added when the files are ready.':'Printing instructions will be added with the final activity materials.'};
   }
   return {players:group?'Example: 4–12 players in small teams':'Example: 1–3 players with an adult',duration:'Example: 20–30 minutes',printing:group?'Keep the facilitator resources separate. Confirm team numbers before printing.':'Keep each player’s workbook together. Confirm how many players need a copy.',files,steps:[
     {id:'welcome',title:`Prepare ${title}`,body:group?'This example uses shared team materials and an adult facilitator.':'This example uses a complete workbook and an adult helper.',items:[group?'Share one kit within each team.':'Give each player their own workbook.','All instructions here are placeholders awaiting author review.']},

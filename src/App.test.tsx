@@ -224,9 +224,20 @@ test.each([
   const gameplayButtons=within(within(gameplay).getByRole('list',{name:'How to Play steps'})).getAllByRole('button');
   expect(gameplayButtons).toHaveLength(5);
   expect(gameplayButtons.every(button=>button.hasAttribute('disabled'))).toBe(true);
-  expect(within(preparation).getByText('CONTENT PLACEHOLDER')).toBeTruthy();
+  const variant=activities.find(a=>a.id===id)!.variants[mode];
+  if(id==='officers-investigation'&&mode==='group'){
+    expect(within(preparation).queryByText('CONTENT PLACEHOLDER')).toBeNull();
+    expect(screen.getByText('Print one Group Investigation Pack for each Investigation Team.')).toBeTruthy();
+  }else expect(within(preparation).getByText('CONTENT PLACEHOLDER')).toBeTruthy();
   for(let i=0;i<10;i++){
-    await screen.findByRole('heading',{level:3,name:i<5?`Preparation step ${i+1}`:`Gameplay step ${i-4}`});
+    await screen.findByRole('heading',{level:3,name:variant.steps[i].title});
+    if(id==='officers-investigation'&&mode==='group'){
+      if(i===1)expect(screen.getByText('Each piece of equipment can only be used once. Choose carefully!')).toBeTruthy();
+      if(i===2)expect(screen.getByText('Keep the Character Actor Cards with the facilitator. Don’t give the interview scripts to the Investigation Teams.')).toBeTruthy();
+      if(i===3)expect(screen.getByText(/Each team should choose its first Evidence Recorder/)).toBeTruthy();
+      if(i===4)expect(screen.getByText('Honey has a new case. It’s time to open the investigation.')).toBeTruthy();
+      if(i===5)expect(within(gameplay).getByText('CONTENT PLACEHOLDER')).toBeTruthy();
+    }
     if(i<9)expect(screen.queryByRole('button',{name:/I’m Ready to Print/})).toBeNull();
     await user.click(screen.getByRole('button',{name:i===9?/I’m Ready to Print/:i===4?/Continue to How to Play/:/Next step/}));
     if(i===4)expect(within(preparation).getByText('Completed')).toBeTruthy();
