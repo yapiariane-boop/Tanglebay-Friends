@@ -210,3 +210,26 @@ test.each(['home','group'] as const)('Wild Path %s has stacked preparation and g
   expect(screen.queryByText('Demonstration materials only')).toBeNull();
   if(mode==='group')expect(screen.getByRole('heading',{name:'Facilitation Guide'})).toBeTruthy();
 });
+
+test.each([
+  ['dimitris-lab','home'],['dimitris-lab','group'],
+  ['officers-investigation','home'],['officers-investigation','group'],
+] as const)('%s %s has two five-step guidance boxes before printing',async(id,mode)=>{
+  window.location.hash=`/episodes/episode-1/activities/${id}`;
+  render(<App/>);const user=userEvent.setup();
+  await user.click(screen.getByRole('button',{name:mode==='home'?/I’m playing at home/:/I’m playing with a group/}));
+  const preparation=await screen.findByRole('region',{name:'Prepare the Game'});
+  const gameplay=screen.getByRole('region',{name:'How to Play'});
+  expect(within(within(preparation).getByRole('list',{name:'Prepare the Game steps'})).getAllByRole('button')).toHaveLength(5);
+  const gameplayButtons=within(within(gameplay).getByRole('list',{name:'How to Play steps'})).getAllByRole('button');
+  expect(gameplayButtons).toHaveLength(5);
+  expect(gameplayButtons.every(button=>button.hasAttribute('disabled'))).toBe(true);
+  expect(within(preparation).getByText('CONTENT PLACEHOLDER')).toBeTruthy();
+  for(let i=0;i<10;i++){
+    await screen.findByRole('heading',{level:3,name:i<5?`Preparation step ${i+1}`:`Gameplay step ${i-4}`});
+    if(i<9)expect(screen.queryByRole('button',{name:/I’m Ready to Print/})).toBeNull();
+    await user.click(screen.getByRole('button',{name:i===9?/I’m Ready to Print/:i===4?/Continue to How to Play/:/Next step/}));
+    if(i===4)expect(within(preparation).getByText('Completed')).toBeTruthy();
+  }
+  await screen.findByRole('heading',{name:'You’re ready to print!'});
+});
