@@ -280,6 +280,12 @@ test.each([
     if(i===stepCount-1)expect(within(preparation).getByText('Completed')).toBeTruthy();
   }
   await screen.findByRole('heading',{name:'You’re ready to print!'});
+  if(id==='dimitris-lab'&&mode==='home'){
+    expect(screen.getByRole('heading',{name:'Inside Dimitri’s Lab — Home Kit'})).toBeTruthy();
+    expect(screen.getByText('PRINTABLE PDF · 6 PAGES')).toBeTruthy();
+    expect(screen.queryByText('Demonstration materials only')).toBeNull();
+    expect(screen.getByRole('link',{name:/Download PDF/}).getAttribute('href')).toBe('./packs/dimitris-lab-home-kit.pdf');
+  }
   if(id==='dimitris-lab'&&mode==='group'){
     for(const [title,href,pages] of [
       ['Research Guidance Sheet','./packs/dimitris-lab-research-guidance-sheet.pdf',1],
