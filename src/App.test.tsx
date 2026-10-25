@@ -227,32 +227,32 @@ test.each([
   const variant=activities.find(a=>a.id===id)!.variants[mode];
   if(id==='officers-investigation'&&mode==='group'){
     expect(within(preparation).queryByText('CONTENT PLACEHOLDER')).toBeNull();
-    expect(screen.getByText('Print one Group Investigation Pack for each Investigation Team.')).toBeTruthy();
+    expect(screen.getByText('Divide the children into small Investigation Teams.')).toBeTruthy();
   }else expect(within(preparation).getByText('CONTENT PLACEHOLDER')).toBeTruthy();
   for(let i=0;i<10;i++){
     await screen.findByRole('heading',{level:3,name:variant.steps[i].title});
     if(id==='officers-investigation'&&mode==='group'){
-      if(i===1)expect(screen.getByText('Each piece of equipment can only be used once. Choose carefully!')).toBeTruthy();
-      if(i===2)expect(screen.getByText('Keep the Character Actor Cards with the facilitator. Don’t give the interview scripts to the Investigation Teams.')).toBeTruthy();
-      if(i===3)expect(screen.getByText(/Each team should choose its first Evidence Recorder/)).toBeTruthy();
-      if(i===4)expect(screen.getByText('Honey has a new case. It’s time to open the investigation.')).toBeTruthy();
+      if(i===1)expect(screen.getByText('Print one complete 13-page Team Kit for each team.')).toBeTruthy();
+      if(i===2)expect(screen.getByText('Choose four children to play Bridget, Octena, Deedee and Moow.')).toBeTruthy();
+      if(i===3)expect(screen.getByText(/Give each actor access only to their own script/)).toBeTruthy();
+      if(i===4)expect(screen.getByText(/paper scissors, glue and a pen/)).toBeTruthy();
       if(i===5){
         expect(within(gameplay).queryByText('CONTENT PLACEHOLDER')).toBeNull();
-        expect(screen.getByText('What is evidence, and what are we only assuming?')).toBeTruthy();
-        expect(screen.getByText(/The case begins with a live interview with the victim/)).toBeTruthy();
+        expect(screen.getByText(/With four teams or fewer/)).toBeTruthy();
       }
-      if(i===6)expect(screen.getByText(/each tool can only be used once during the case/)).toBeTruthy();
+      if(i===6)expect(screen.getByText(/there is no challenge before it/)).toBeTruthy();
       if(i===7){
-        expect(screen.getByText('We used it by…')).toBeTruthy();
-        expect(screen.getByText('This helped because…')).toBeTruthy();
-        expect(screen.getByText('Choose one tool, cut it out and glue it onto your team’s Officer Hat.')).toBeTruthy();
-        expect(screen.getByText(/Once the situation is solved and your explanation is complete, move on to the next scene and its interview/)).toBeTruthy();
+        expect(screen.getByText(/glue it onto your Investigator Hat to activate it/)).toBeTruthy();
+        expect(screen.getByText(/Each tool can only be used once/)).toBeTruthy();
       }
-      if(i===8)expect(screen.getByText('What could suggest they are innocent?')).toBeTruthy();
+      if(i===8){
+        expect(screen.getByText('Challenge 3 → final suspect interview → notes')).toBeTruthy();
+        expect(screen.getByText('There are four interviews and three challenges in total.')).toBeTruthy();
+        expect(screen.getByText(/use the five minutes afterwards/)).toBeTruthy();
+      }
       if(i===9){
-        expect(screen.getByText('The main thing that made us hesitate was…')).toBeTruthy();
-        expect(screen.getByText(/You may reconsider your conclusion before locking in your final answer/)).toBeTruthy();
-        expect(screen.getByText('Then let Honey reveal what really happened. 🔎')).toBeTruthy();
+        expect(screen.getByText(/complete the three Suspect Files together/)).toBeTruthy();
+        expect(screen.getByText(/Honey calls on each department/)).toBeTruthy();
       }
     }
     if(i<9)expect(screen.queryByRole('button',{name:/I’m Ready to Print/})).toBeNull();
