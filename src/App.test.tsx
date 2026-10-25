@@ -173,26 +173,31 @@ test.each(['home','group'] as const)('Wild Path %s has stacked preparation and g
     expect(screen.getByText('Print the game board, Character Cards, Challenge Map, Misery & Bonuses Map, tokens and Tanglebay Chunky Dice.')).toBeTruthy();
     expect(within(preparation).queryByText('CONTENT PLACEHOLDER')).toBeNull();
   }else{
-    expect(within(preparation).getByText('Print one 8-page Wild Path Pack for each team.')).toBeTruthy();
+    expect(within(preparation).getByText('Print one 8-page Wild Path Pack for the whole group.')).toBeTruthy();
     expect(within(preparation).queryByText('CONTENT PLACEHOLDER')).toBeNull();
   }
   for(let i=0;i<10;i++){
     await screen.findByRole('heading',{level:3,name:variant.steps[i].title});
     if(mode==='home'&&i===4)expect(screen.getByText('Now it’s time to build your teams.')).toBeTruthy();
-    if(mode==='group'&&i===1)expect(screen.getByText('Don’t assign the teams yet. The players will discover them themselves.')).toBeTruthy();
-    if(mode==='group'&&i===3)expect(screen.getByText('Prepare one playing table for each team, with one game board and both reference maps.')).toBeTruthy();
-    if(mode==='group'&&i===4)expect(screen.getByText('At the shared draw station, each player draws one folded Team ID and one random Character Card.')).toBeTruthy();
-    if(mode==='group'&&i===5){
-      expect(within(gameplay).getByText('Meet your new teammates and discover the characters on your team.')).toBeTruthy();
-      expect(within(gameplay).queryByText('CONTENT PLACEHOLDER')).toBeNull();
-    }
-    if(mode==='group'&&i===6)expect(screen.getByText('Rotate the Roller each turn so everyone gets a chance to roll and move the team.')).toBeTruthy();
-    if(mode==='group'&&i===7)expect(screen.getByText(/The player holding that Character Card explains how their character’s ability could solve the problem/)).toBeTruthy();
-    if(mode==='group'&&i===8)expect(screen.getByText('If they agree, your Creative Solution succeeds!')).toBeTruthy();
-    if(mode==='group'&&i===9){
-      expect(screen.getByText('Challenge succeeded? Move your Team Leader forward one extra space.')).toBeTruthy();
-      expect(screen.getByText('Challenge failed? Stay on the Challenge space. When your next turn comes, roll the dice again and continue from there.')).toBeTruthy();
-      expect(screen.getByText('The first team to reach the end of the Wild Path wins!')).toBeTruthy();
+    if(mode==='group'){
+      if(i===1)expect(screen.getByText(/up to 12 character players in three teams of four/)).toBeTruthy();
+      if(i===2)expect(screen.getByText('Cut out the 14 Character Cards and shuffle them into one shared deck.')).toBeTruthy();
+      if(i===3){
+        expect(screen.getByText('Each player draws one folded Team Code and one Character Card from the shared deck.')).toBeTruthy();
+        expect(screen.getByText(/every player has a different character/)).toBeTruthy();
+      }
+      if(i===4)expect(screen.getByText(/whole team shares this token/)).toBeTruthy();
+      if(i===5){
+        expect(within(gameplay).queryByText('CONTENT PLACEHOLDER')).toBeNull();
+        expect(screen.getByText('Teams take turns rolling the die and moving their shared token.')).toBeTruthy();
+      }
+      if(i===6)expect(screen.getByText('There are 13 challenges along the Wild Path.')).toBeTruthy();
+      if(i===7)expect(screen.getByText('The child whose character can help explains the solution on behalf of the team.')).toBeTruthy();
+      if(i===8)expect(screen.getByText(/The Judges decide whether the explanation is convincing/)).toBeTruthy();
+      if(i===9){
+        expect(screen.getByText(/Move your team’s token forward one extra space/)).toBeTruthy();
+        expect(screen.getByText(/first team to reach the end of the Wild Path wins/)).toBeTruthy();
+      }
     }
     if(mode==='home'&&i===5){
       expect(screen.getByText('Each player randomly draws 4 Character Cards.')).toBeTruthy();
@@ -213,7 +218,11 @@ test.each(['home','group'] as const)('Wild Path %s has stacked preparation and g
   expect(screen.getByRole('link',{name:/Download PDF/}).getAttribute('href')).toBe('./packs/the-wild-path-home-pack.pdf');
   expect(screen.getByText('PRINTABLE PDF · 8 PAGES')).toBeTruthy();
   expect(screen.queryByText('Demonstration materials only')).toBeNull();
-  if(mode==='group')expect(screen.getByRole('heading',{name:'Facilitation Guide'})).toBeTruthy();
+  if(mode==='group'){
+    expect(screen.getByText('One shared 8-page pack for the whole group · approx. 29 MB')).toBeTruthy();
+    expect(screen.getByText(/all teams share one board/)).toBeTruthy();
+    expect(screen.getByRole('heading',{name:'Facilitation Guide'})).toBeTruthy();
+  }
 });
 
 test.each([
