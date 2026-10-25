@@ -330,7 +330,7 @@ const labHomeSteps: Step[] = [
   {
     "id": "prepare-research-kit",
     "title": "Get Your Research Kit Ready",
-    "body": "Print the Home Kit and grab a pencil. Have scissors and glue ready if you’re adding your character’s picture. Your research adventure starts here!"
+    "body": "Print the Home Kit and grab a pencil. Have scissors and glue ready to cut out your character’s portrait from the last page and add it to your research sheet. Your research adventure starts here!"
   },
   {
     "id": "sign-contract",
@@ -644,7 +644,7 @@ const investigationGroupGameplay: Step[] = [
 function variant(id: string, title: string, mode: Mode): Variant {
   const group = mode === 'group';
   const files: PackFile[] = [{id:'activity',title: group ? 'Shared team activity kit' : 'Home activity workbook',href:`./packs/${id}-${mode}-activity.pdf`,copies:group?'Example: one kit per team':'Example: one workbook per player'}];
-  if (id === 'dimitris-lab' && !group) files[0]={id:'activity',title:'Inside Dimitri’s Lab — Home Kit',href:'./packs/dimitris-lab-home-kit.pdf',copies:'6-page Home Kit · approx. 7.1 MB',placeholder:false,pageCount:6};
+  if (id === 'dimitris-lab' && !group) files[0]={id:'activity',title:'Inside Dimitri’s Lab — Home Kit',href:'./packs/dimitris-lab-home-kit.pdf',copies:'7-page Home Kit · approx. 9.8 MB',placeholder:false,pageCount:7};
   if (group) files.push({id:'guide',title:'Facilitation Guide',href:`./packs/${id}-group-guide.pdf`,copies:'Example: one copy for the facilitator'});
   if (id === 'officers-investigation') files.push({id:'evidence',title:'Evidence materials',href:`./packs/${id}-${mode}-evidence.pdf`,copies:group?'Example: one set per team':'Example: one set per household',optional:true});
   if (id === 'discussion-cards' && mode === 'home') return {
@@ -681,14 +681,14 @@ function variant(id: string, title: string, mode: Mode): Variant {
   }
   if (id === 'dimitris-lab' && !group) return {
     guidanceLabel:'RESEARCH GUIDANCE',players:'Explore independently or share your discoveries with family and friends',duration:'',steps:labHomeSteps,files,
-    printing:'Print the Home Kit once to get started. For each new character, reprint only the three research pages (pages 4–6 of the current PDF); keep your contract and Command Center. Check paper size and scaling in print preview before printing.',
+    printing:'Print all 7 pages of the Home Kit once to get started. The character portraits are on page 7. For each new character, reprint only the three research pages (pages 4–6 of the current PDF); keep your contract, Command Center and remaining portraits. Check paper size and scaling in print preview before printing.',
   };
   if (id === 'dimitris-lab' && group) {
     const guidanceSections: GuidanceSection[] = [
       {id:'preparation',title:'Prepare the Game',description:'Before you begin: four steps to prepare your research.',placeholder:false,steps:labGroupPreparation},
       {id:'gameplay',title:'How to Play',description:'Five steps from individual research to the Research Fair.',placeholder:false,steps:labGroupGameplay},
     ];
-    return {guidanceSections,guidanceLabel:'ACTIVITY GUIDE',players:'Individual researchers working in small Research Teams',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files:[{id:'research-guidance',title:'Research Guidance Sheet',href:'./packs/dimitris-lab-research-guidance-sheet.pdf',copies:'One copy per child · 1 page',placeholder:false,pageCount:1},{id:'team-kit',title:'Complete Lab Pack',href:'./packs/dimitris-lab-group-team-kit.pdf',copies:'One copy per Research Team · 6 pages',placeholder:false,pageCount:6}],printing:'Print one Research Guidance Sheet per child and one complete Lab Pack per Research Team. Keep the complete Lab Packs aside until Team Research; children use scrap paper during individual research.'};
+    return {guidanceSections,guidanceLabel:'ACTIVITY GUIDE',players:'Individual researchers working in small Research Teams',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files:[{id:'research-guidance',title:'Research Guidance Sheet',href:'./packs/dimitris-lab-research-guidance-sheet.pdf',copies:'One copy per child · 1 page',placeholder:false,pageCount:1},{id:'team-kit',title:'Complete Lab Pack',href:'./packs/dimitris-lab-group-team-kit.pdf',copies:'One copy per Research Team · 6 pages',placeholder:false,pageCount:6}],printing:'Print one Research Guidance Sheet per child and one complete Lab Pack per Research Team. Keep the complete Lab Packs aside until Team Research; children use scrap paper during individual research. The Group Kit includes character portraits on page 6; have scissors and glue ready to add a portrait to the research sheet. For a new character, reprint research pages 3–5 as needed and keep the contract, Command Center and remaining portraits.'};
   }
   if (id === 'officers-investigation' && !group) {
     const guidanceSections: GuidanceSection[] = [

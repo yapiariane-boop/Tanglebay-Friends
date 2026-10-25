@@ -346,7 +346,8 @@ test('Dimitri lab home uses five slides and explains reusable research pages',as
   }
   await screen.findByRole('heading',{name:'You’re ready to print!'});
   expect(screen.getByText(/pages 4–6 of the current PDF/)).toBeTruthy();
-  expect(screen.getByText('PRINTABLE PDF · 6 PAGES')).toBeTruthy();
+  expect(screen.getByText('PRINTABLE PDF · 7 PAGES')).toBeTruthy();
+  expect(screen.getByText(/character portraits are on page 7/)).toBeTruthy();
   expect(screen.getByRole('link',{name:/Download PDF/}).getAttribute('href')).toBe('./packs/dimitris-lab-home-kit.pdf');
   expect(screen.queryByText('Demonstration materials only')).toBeNull();
 });
