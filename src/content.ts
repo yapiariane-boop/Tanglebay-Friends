@@ -13,7 +13,7 @@ export interface Step { roles?: {title:string;body:string}[]; prompts?:string[];
 export interface GuidanceSection { placeholder?:boolean; id:string; title:string; description:string; steps:Step[] }
 export interface PackFile { id: string; title: string; href: string; copies: string; optional?: boolean; placeholder?: boolean; pageCount?: number }
 export interface DuplexGuide { previews: {src:string; alt:string; label:string}[]; flipEdge: string; orientation:string; cards:number }
-export interface Variant { guidanceSections?: GuidanceSection[]; cubeAssembly?: {patternSrc:string;boardSrc:string}; comingSoonFiles?: string[]; duplexGuide?: DuplexGuide; guidanceLabel?: string; printNotice?: string; players: string; duration: string; steps: Step[]; printing: string; files: PackFile[] }
+export interface Variant { guidanceSections?: GuidanceSection[]; cubeAssembly?: {patternSrc:string;boardSrc:string}; comingSoonFiles?: string[]; comingSoonDescriptions?: Record<string,string>; duplexGuide?: DuplexGuide; guidanceLabel?: string; printNotice?: string; players: string; duration: string; steps: Step[]; printing: string; files: PackFile[] }
 export interface Activity { id: string; title: string; catchphrase: string; description: string; episodeIds: string[]; color: string; artwork: {src?: string; alt: string}; gallery?: {src: string; alt: string}[]; variants: Record<Mode, Variant> }
 export interface Episode {id: string; title: string; description: string; artwork?: {src: string; alt: string}; comingSoon?: boolean}
 export const episodes: Episode[] = [
@@ -321,6 +321,116 @@ const wildPathGroupGameplay: Step[] = [
   }
 ];
 
+const labGroupPreparation: Step[] = [
+  {
+    "id": "lab-prepare-1",
+    "title": "Read the Tanglebay Biology Secrets",
+    "lead": "Before starting this activity, read the Tanglebay Biology Secrets section at the end of the book.",
+    "body": "It introduces the animal adaptations that researchers will explore in Dimitri’s Lab."
+  },
+  {
+    "id": "lab-prepare-2",
+    "title": "Form Your Research Teams",
+    "lead": "Divide the children into small Research Teams before printing, so you know how many complete Lab Packs you need.",
+    "body": "Children will begin by researching individually, then work with these teams."
+  },
+  {
+    "id": "lab-prepare-3",
+    "title": "Print Your Research Materials",
+    "lead": "Print one Research Guidance Sheet per child and one complete Lab Pack per team.",
+    "body": "Keep the complete Lab Packs aside until the Team Research phase. Children record their individual ideas on scrap paper, so they do not need a full pack each."
+  },
+  {
+    "id": "lab-prepare-4",
+    "title": "Gather Your Supplies",
+    "lead": "Have scrap paper and pencils ready for every researcher.",
+    "body": "Have extra paper and any drawing or craft materials teams can use for their Research Fair stands."
+  }
+];
+
+const labGroupGameplay: Step[] = [
+  {
+    "id": "lab-play-1",
+    "title": "Get Ready for Individual Research",
+    "body": "",
+    "roles": [
+      {
+        "title": "Researchers",
+        "body": "Begin independently, even though you already belong to a Research Team. Record your own ideas before discussing them with others."
+      },
+      {
+        "title": "Facilitator",
+        "body": "Choose the character researchers will investigate. Give each child a Research Guidance Sheet, scrap paper and a pencil. Keep the complete Lab Packs aside."
+      }
+    ]
+  },
+  {
+    "id": "lab-play-2",
+    "title": "Start the Individual Research",
+    "body": "",
+    "roles": [
+      {
+        "title": "Researchers",
+        "body": "Use your Research Guidance Sheet to work through CHALLENGE → ADAPTATION → CONSEQUENCES → PRINCIPLE → HUMAN COPYCATS. Record your thinking on scrap paper."
+      },
+      {
+        "title": "Facilitator",
+        "body": "Introduce the chosen character and let every researcher complete the Research Chain independently. Encourage unusual ideas when the reasoning makes sense. In Dimitri’s Lab, unexpected answers are new data! Once everyone has completed their individual research, move to Team Research."
+      }
+    ]
+  },
+  {
+    "id": "lab-play-3",
+    "title": "Open the Team Lab",
+    "body": "",
+    "roles": [
+      {
+        "title": "Researchers",
+        "body": "Compare your individual findings, explain your Human Copycats and discuss which ideas are strongest. Together, complete the official research pages in your shared Lab Pack. Select your 3 strongest Human Copycat analogies to take to the Research Fair."
+      },
+      {
+        "title": "Facilitator",
+        "body": "Now give each Research Team one complete Lab Pack."
+      }
+    ]
+  },
+  {
+    "id": "lab-play-4",
+    "title": "Launch the Research Fair",
+    "body": "",
+    "roles": [
+      {
+        "title": "Researchers",
+        "body": "Use posters, drawings, crafts, demonstrations or mini-presentations to showcase your findings however you like. Present findings from one character, several characters or combine your favourite discoveries. Visit the other teams’ stands to discover their research."
+      },
+      {
+        "title": "Facilitator",
+        "body": "Once teams have selected their strongest findings, give them time to build a small stand. Then open the Fair and invite researchers to visit one another’s stands."
+      }
+    ]
+  },
+  {
+    "id": "lab-play-5",
+    "title": "Share, Borrow & Reflect",
+    "body": "",
+    "roles": [
+      {
+        "title": "Researchers",
+        "body": "Collect 1–2 strong Human Copycat analogies from other teams during the Research Fair. Note the name of each team whose idea you borrow. Back with your team, complete your Final Research Summary with your three selected analogies and the borrowed discoveries, giving credit to their original teams."
+      },
+      {
+        "title": "Facilitator",
+        "body": "Choose how teams share their completed research. Collect their Final Research Summaries, invite a representative from each team to explain their discoveries, or lead an informal class discussion. Focus on how researchers explain and develop their ideas. Different answers can be valuable when the reasoning makes sense."
+      }
+    ],
+    "after": "Continue the Lab: choose another character and repeat the research cycle, or explore the next Lab Level when appropriate.",
+    "items": [
+      "Junior Researcher: Ricky · Erica · Honey",
+      "Research Genius: Dimitri · Mimi · Leon"
+    ]
+  }
+];
+
 const investigationHomePreparation: Step[] = [
   {
     "id": "home-prepare-1",
@@ -530,6 +640,13 @@ function variant(id: string, title: string, mode: Mode): Variant {
       {id:'gameplay',placeholder:false,title:'How to Play',description:'Five steps to understand the gameplay.',steps:group?wildPathGroupGameplay:wildPathHomeGameplay},
     ];
     return {guidanceSections, guidanceLabel:'ACTIVITY GUIDE',players:group?'One team per table; one Character Card per player':'Each player leads a team of 4 characters',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files:[{id:'activity',title:group?'Team activity kit — The Wild Path':'The Wild Path — Home pack',href:'./packs/the-wild-path-home-pack.pdf',copies:group?'One 8-page pack per team · approx. 29 MB':'8 pages · approx. 29 MB · board, Character Cards, reference maps, tokens and Chunky Dice',placeholder:false,pageCount:8}],comingSoonFiles:group?['Facilitation Guide']:undefined,printing:'The pack includes the board (page 1), Challenge Map (page 2), tokens (page 3), Chunky Dice (page 4), Misery & Bonuses Map (page 5), and Character Cards (pages 6–8). The PDF uses large custom page sizes: check your paper size and scaling in print preview before printing. Keep both reference maps readable. Use a regular die if you prefer to skip the dice craft.'};
+  }
+  if (id === 'dimitris-lab' && group) {
+    const guidanceSections: GuidanceSection[] = [
+      {id:'preparation',title:'Prepare the Game',description:'Before you begin: four steps to prepare your research.',placeholder:false,steps:labGroupPreparation},
+      {id:'gameplay',title:'How to Play',description:'Five steps from individual research to the Research Fair.',placeholder:false,steps:labGroupGameplay},
+    ];
+    return {guidanceSections,guidanceLabel:'ACTIVITY GUIDE',players:'Individual researchers working in small Research Teams',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files:[],comingSoonFiles:['Research Guidance Sheet','Complete Lab Pack'],comingSoonDescriptions:{'Research Guidance Sheet':'One copy per child · PDF coming soon.','Complete Lab Pack':'One copy per Research Team · PDF coming soon.'},printing:'Print one Research Guidance Sheet per child and one complete Lab Pack per Research Team. Keep the complete Lab Packs aside until Team Research; children use scrap paper during individual research.'};
   }
   if (id === 'officers-investigation' && !group) {
     const guidanceSections: GuidanceSection[] = [

@@ -220,10 +220,11 @@ test.each([
   await user.click(screen.getByRole('button',{name:mode==='home'?/I’m playing at home/:/I’m playing with a group/}));
   const preparation=await screen.findByRole('region',{name:'Prepare the Game'});
   const gameplay=screen.getByRole('region',{name:'How to Play'});
-  const stepCount=id==='officers-investigation'&&mode==='home'?4:5;
+  const stepCount=(id==='officers-investigation'&&mode==='home')||(id==='dimitris-lab'&&mode==='group')?4:5;
+  const gameplayCount=id==='dimitris-lab'&&mode==='group'?5:stepCount;
   expect(within(within(preparation).getByRole('list',{name:'Prepare the Game steps'})).getAllByRole('button')).toHaveLength(stepCount);
   const gameplayButtons=within(within(gameplay).getByRole('list',{name:'How to Play steps'})).getAllByRole('button');
-  expect(gameplayButtons).toHaveLength(stepCount);
+  expect(gameplayButtons).toHaveLength(gameplayCount);
   expect(gameplayButtons.every(button=>button.hasAttribute('disabled'))).toBe(true);
   const variant=activities.find(a=>a.id===id)!.variants[mode];
   if(id==='officers-investigation'&&mode==='group'){
@@ -232,9 +233,20 @@ test.each([
   }else if(id==='officers-investigation'){
     expect(within(preparation).queryByText('CONTENT PLACEHOLDER')).toBeNull();
     expect(screen.getByText('Print all 22 pages of the Home Investigation Notebook.')).toBeTruthy();
+  }else if(mode==='group'){
+    expect(within(preparation).queryByText('CONTENT PLACEHOLDER')).toBeNull();
+    expect(screen.getByText(/read the Tanglebay Biology Secrets section/)).toBeTruthy();
   }else expect(within(preparation).getByText('CONTENT PLACEHOLDER')).toBeTruthy();
   for(let i=0;i<variant.steps.length;i++){
     await screen.findByRole('heading',{level:3,name:variant.steps[i].title});
+    if(id==='dimitris-lab'&&mode==='group'&&i>=stepCount){
+      expect(within(gameplay).getByRole('region',{name:'Researchers'})).toBeTruthy();
+      expect(within(gameplay).getByRole('region',{name:'Facilitator'})).toBeTruthy();
+      if(i===8){
+        expect(screen.getByText(/giving credit to their original teams/)).toBeTruthy();
+        expect(screen.getByText('Research Genius: Dimitri · Mimi · Leon')).toBeTruthy();
+      }
+    }
     if(id==='officers-investigation'&&mode==='group'){
       if(i===1)expect(screen.getByText('Print one complete 13-page Team Kit for each team.')).toBeTruthy();
       if(i===2)expect(screen.getByText('Choose four children to play Bridget, Octena, Deedee and Moow.')).toBeTruthy();
@@ -268,6 +280,16 @@ test.each([
     if(i===stepCount-1)expect(within(preparation).getByText('Completed')).toBeTruthy();
   }
   await screen.findByRole('heading',{name:'You’re ready to print!'});
+  if(id==='dimitris-lab'&&mode==='group'){
+    for(const title of ['Research Guidance Sheet','Complete Lab Pack']){
+      const card=screen.getByRole('heading',{name:title}).closest('article')!;
+      expect(within(card).getByText('COMING SOON')).toBeTruthy();
+      expect(within(card).queryByRole('link')).toBeNull();
+    }
+    expect(screen.getByText('One copy per child · PDF coming soon.')).toBeTruthy();
+    expect(screen.getByText('One copy per Research Team · PDF coming soon.')).toBeTruthy();
+    expect(screen.queryByRole('link',{name:/Download PDF/})).toBeNull();
+  }
   if(id==='officers-investigation'&&mode==='home'){
     expect(screen.getByText('PRINTABLE PDF · 22 PAGES')).toBeTruthy();
     expect(screen.queryByText('Demonstration materials only')).toBeNull();
