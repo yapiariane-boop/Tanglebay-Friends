@@ -640,6 +640,11 @@ const investigationGroupGameplay: Step[] = [
   }
 ];
 
+const discussionDuplexGuide: DuplexGuide = {orientation:'Landscape',flipEdge:'Short edge',cards:8,previews:[
+      {src:'./artwork/discussion-pack-preview-1.webp',alt:'Fronts of the eight discussion cards, with story scenes and questions.',label:'Page 1 · Front'},
+      {src:'./artwork/discussion-pack-preview-2.webp',alt:'Matching backs of the eight discussion cards, with follow-up questions.',label:'Page 2 · Back'},
+    ]};
+
 // Other activity guidance and Group printable logistics remain prototype examples.
 function variant(id: string, title: string, mode: Mode): Variant {
   const group = mode === 'group';
@@ -652,22 +657,20 @@ function variant(id: string, title: string, mode: Mode): Variant {
     steps:discussionHomeSteps,
     files:[{id:'activity',title:'Discussion Cards — Home pack',href:'./packs/discussion-cards-home-pack.pdf',copies:'2 PDF pages → 1 double-sided sheet → 8 cards',placeholder:false,pageCount:2}],
     printing:'Print both PDF pages on opposite sides of ONE sheet, then cut along the dotted lines. Do not cut until both sides are printed.',
-    duplexGuide:{orientation:'Landscape',flipEdge:'Short edge',cards:8,previews:[
-      {src:'./artwork/discussion-pack-preview-1.webp',alt:'Fronts of the eight discussion cards, with story scenes and questions.',label:'Page 1 · Front'},
-      {src:'./artwork/discussion-pack-preview-2.webp',alt:'Matching backs of the eight discussion cards, with follow-up questions.',label:'Page 2 · Back'},
-    ]},
+    duplexGuide:discussionDuplexGuide,
   };
   if (id === 'discussion-cards' && mode === 'group') return {
     guidanceLabel:'DISCUSSION GUIDANCE', players:'Small teams with a facilitator', duration:'',
     steps:discussionGroupSteps,
     files:[{id:'activity',title:'Team activity kit — Discussion Cards',href:'./packs/discussion-cards-home-pack.pdf',copies:'Each set: 2 PDF pages → 1 double-sided sheet → 8 cards',placeholder:false,pageCount:2}],
+    duplexGuide:discussionDuplexGuide,
     facilitationNote:'Start with the illustrated front of the card: reread the referenced story pages together, then explore what went wrong. Give teams time to reflect and share their answers before turning the card over to discuss what could have been done better. This is a slow-paced reading and reflection activity: take your time with each card.',
     printing:'Use the same cards as the Home pack. For each set, print both PDF pages on ONE sheet, double-sided in landscape, flipping on the short edge. Fit both pages to the printable area using the same scaling. Test one plain-paper sheet for alignment, then cut after both sides are printed.',
   };
   if (id === 'five-minutes') return {
     guidanceLabel:'DEBATE GUIDANCE', players:group?'Two Players, Judges and a facilitator':'2 or more players; extra participants judge the round', duration:'',
     steps:group?standGroupSteps:standHomeSteps,
-    cubeAssembly:group?{patternSrc:'./artwork/stand-cube-pattern.webp',boardSrc:'./artwork/stand-assembly-board.webp'}:undefined,
+    cubeAssembly:{patternSrc:'./artwork/stand-cube-pattern.webp',boardSrc:'./artwork/stand-assembly-board.webp'},
     files:[{id:'activity',title:group?'Team activity kit — 5 Seconds for a Stand':'5 Seconds for a Stand — Home pack',href:'./packs/five-seconds-for-a-stand.pdf',copies:'5-page pack: board, three 3D position templates and question cards',placeholder:false,pageCount:5}],
     comingSoonFiles:group?['Facilitation Guide']:undefined,
     printing:'Choose the flat or 3D version. For flat play, use the board on page 1 and the questions on page 5. For 3D pieces, also print pages 2–4, then cut and assemble the templates. Cut out the questions, fold them and mix them in a bowl.',

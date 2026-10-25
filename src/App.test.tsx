@@ -34,7 +34,7 @@ test('complete story-to-print journey for home and group',async()=>{
       await user.click(screen.getByRole('button',{name:i===variant.steps.length-1?/I’m Ready to Print/:/Next step/}));
     }
     await screen.findByRole('heading',{name:'You’re ready to print!'});
-    if(mode==='home') {
+    {
       expect(screen.getByText('Page 1 · Front')).toBeTruthy();
       expect(screen.getByText('Page 2 · Back')).toBeTruthy();
       expect(screen.queryByText('Demonstration materials only')).toBeNull();
@@ -147,7 +147,7 @@ test.each(['home','group'] as const)('5 Seconds for a Stand %s guidance covers j
   expect(screen.getByRole('link',{name:/Download PDF/}).getAttribute('href')).toBe('./packs/five-seconds-for-a-stand.pdf');
   expect(screen.getByText('PRINTABLE PDF · 5 PAGES')).toBeTruthy();
   expect(screen.queryByText('Demonstration materials only')).toBeNull();
-  if(mode==='group'){
+  {
     const assembly=screen.getByRole('region',{name:'Build your 3D button'});
     expect(assembly.getAttribute('data-running')).toBe('false');
     await user.click(screen.getByRole('button',{name:'Play assembly animation'}));
@@ -156,8 +156,6 @@ test.each(['home','group'] as const)('5 Seconds for a Stand %s guidance covers j
     expect(assembly.getAttribute('data-running')).toBe('false');
     await user.click(screen.getByRole('button',{name:'4. Place on board'}));
     expect(assembly.getAttribute('data-frame')).toBe('3');
-  }else{
-    expect(screen.queryByRole('region',{name:'Build your 3D button'})).toBeNull();
   }
 });
 

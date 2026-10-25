@@ -68,3 +68,5 @@ Dimitri’s Lab Group has four preparation steps and five gameplay steps with Re
 Dimitri’s Lab Home downloads the author-supplied seven-page PDF `public/packs/dimitris-lab-home-kit.pdf` (about 9.8 MB). Home instructions use five slides: revisit Biology Secrets, prepare the kit, sign the contract, research and share discoveries. Reprint only research pages 4–6 for each new character; keep the contract and Command Center. Updated Home and Group PDFs include character portraits on their final pages (Home page 7, Group page 6). Home research pages remain 4–6; Group research pages are 3–5. Keep contracts, Command Centers and unused portraits when repeating research.
 
 Discussion Cards Group includes a static Facilitation Guide above the printing section: illustrated fronts explore what went wrong, backs explore what could be improved, with shared reading and unhurried team reflection. No separate facilitator PDF is required.
+
+Discussion Cards shares the same duplex-printing animation in Home and Group. 5 Seconds for a Stand shares its optional 3D assembly animation in both modes. Both animations appear after Ready to Print, with play/pause controls.
