@@ -45,6 +45,13 @@ test('complete story-to-print journey for home and group',async()=>{
       await user.click(screen.getByRole('button',{name:'Pause animation'}));
       expect(demo.getAttribute('data-paused')).toBe('true');
     }
+    if(mode==='group'){
+      const guide=screen.getByRole('complementary',{name:'Facilitation Guide'});
+      expect(within(guide).getByText(/illustrated front of the card/)).toBeTruthy();
+      expect(within(guide).getByText(/slow-paced reading and reflection/)).toBeTruthy();
+      expect(screen.queryByText('COMING SOON')).toBeNull();
+      expect(guide.compareDocumentPosition(screen.getByRole('heading',{name:'Your group pack'}))&Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    }
     const links=screen.getAllByRole('link',{name:/Download PDF/});
     expect(links.map(l=>l.getAttribute('href'))).toEqual(variant.files.map(f=>f.href));
     await user.click(screen.getByRole('link',{name:'Change play setup'}));

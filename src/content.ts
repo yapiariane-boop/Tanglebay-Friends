@@ -13,7 +13,7 @@ export interface Step { roles?: {title:string;body:string}[]; prompts?:string[];
 export interface GuidanceSection { placeholder?:boolean; id:string; title:string; description:string; steps:Step[] }
 export interface PackFile { id: string; title: string; href: string; copies: string; optional?: boolean; placeholder?: boolean; pageCount?: number }
 export interface DuplexGuide { previews: {src:string; alt:string; label:string}[]; flipEdge: string; orientation:string; cards:number }
-export interface Variant { guidanceSections?: GuidanceSection[]; cubeAssembly?: {patternSrc:string;boardSrc:string}; comingSoonFiles?: string[]; comingSoonDescriptions?: Record<string,string>; duplexGuide?: DuplexGuide; guidanceLabel?: string; printNotice?: string; players: string; duration: string; steps: Step[]; printing: string; files: PackFile[] }
+export interface Variant { facilitationNote?: string; guidanceSections?: GuidanceSection[]; cubeAssembly?: {patternSrc:string;boardSrc:string}; comingSoonFiles?: string[]; comingSoonDescriptions?: Record<string,string>; duplexGuide?: DuplexGuide; guidanceLabel?: string; printNotice?: string; players: string; duration: string; steps: Step[]; printing: string; files: PackFile[] }
 export interface Activity { id: string; title: string; catchphrase: string; description: string; episodeIds: string[]; color: string; artwork: {src?: string; alt: string}; gallery?: {src: string; alt: string}[]; variants: Record<Mode, Variant> }
 export interface Episode {id: string; title: string; description: string; artwork?: {src: string; alt: string}; comingSoon?: boolean}
 export const episodes: Episode[] = [
@@ -71,13 +71,13 @@ const discussionGroupSteps: Step[] = [
   {
     "id": "discuss-and-decide",
     "title": "Read, Discuss & Decide",
-    "body": "The facilitator reads the first question aloud and starts a discussion timer. Teams exchange opinions, refer to the story and agree on the key points they want to share. Different interpretations are welcome.",
+    "body": "The facilitator reads the first question aloud and gives teams plenty of time to reflect. Teams exchange opinions, refer to the story and agree on the key points they want to share. Different interpretations are welcome.",
     "visual": "discuss"
   },
   {
     "id": "share-and-refine",
     "title": "Share, Challenge & Refine",
-    "body": "When time is up, each team presents its response. The facilitator selects interesting answers to explore further, asking questions that encourage clearer explanations, stronger evidence and alternative perspectives. Teams may refine their views.",
+    "body": "When teams are ready, each team presents its response. The facilitator selects interesting answers to explore further, asking questions that encourage clearer explanations, stronger evidence and alternative perspectives. Teams may refine their views.",
     "visual": "refine"
   },
   {
@@ -661,7 +661,7 @@ function variant(id: string, title: string, mode: Mode): Variant {
     guidanceLabel:'DISCUSSION GUIDANCE', players:'Small teams with a facilitator', duration:'',
     steps:discussionGroupSteps,
     files:[{id:'activity',title:'Team activity kit — Discussion Cards',href:'./packs/discussion-cards-home-pack.pdf',copies:'Each set: 2 PDF pages → 1 double-sided sheet → 8 cards',placeholder:false,pageCount:2}],
-    comingSoonFiles:['Facilitation Guide'],
+    facilitationNote:'Start with the illustrated front of the card: reread the referenced story pages together, then explore what went wrong. Give teams time to reflect and share their answers before turning the card over to discuss what could have been done better. This is a slow-paced reading and reflection activity: take your time with each card.',
     printing:'Use the same cards as the Home pack. For each set, print both PDF pages on ONE sheet, double-sided in landscape, flipping on the short edge. Fit both pages to the printable area using the same scaling. Test one plain-paper sheet for alignment, then cut after both sides are printed.',
   };
   if (id === 'five-minutes') return {
