@@ -214,25 +214,26 @@ test.each(['home','group'] as const)('Wild Path %s has stacked preparation and g
 test.each([
   ['dimitris-lab','home'],['dimitris-lab','group'],
   ['officers-investigation','home'],['officers-investigation','group'],
-] as const)('%s %s has two five-step guidance boxes before printing',async(id,mode)=>{
+] as const)('%s %s completes both guidance sections before printing',async(id,mode)=>{
   window.location.hash=`/episodes/episode-1/activities/${id}`;
   render(<App/>);const user=userEvent.setup();
   await user.click(screen.getByRole('button',{name:mode==='home'?/I’m playing at home/:/I’m playing with a group/}));
   const preparation=await screen.findByRole('region',{name:'Prepare the Game'});
   const gameplay=screen.getByRole('region',{name:'How to Play'});
-  expect(within(within(preparation).getByRole('list',{name:'Prepare the Game steps'})).getAllByRole('button')).toHaveLength(5);
+  const stepCount=id==='officers-investigation'&&mode==='home'?4:5;
+  expect(within(within(preparation).getByRole('list',{name:'Prepare the Game steps'})).getAllByRole('button')).toHaveLength(stepCount);
   const gameplayButtons=within(within(gameplay).getByRole('list',{name:'How to Play steps'})).getAllByRole('button');
-  expect(gameplayButtons).toHaveLength(5);
+  expect(gameplayButtons).toHaveLength(stepCount);
   expect(gameplayButtons.every(button=>button.hasAttribute('disabled'))).toBe(true);
   const variant=activities.find(a=>a.id===id)!.variants[mode];
   if(id==='officers-investigation'&&mode==='group'){
     expect(within(preparation).queryByText('CONTENT PLACEHOLDER')).toBeNull();
     expect(screen.getByText('Divide the children into small Investigation Teams.')).toBeTruthy();
-  }else {
-    expect(within(preparation).getByText('CONTENT PLACEHOLDER')).toBeTruthy();
-    if(id==='officers-investigation')expect(within(preparation).getByText(/approximately 18–20 pages to print/)).toBeTruthy();
-  }
-  for(let i=0;i<10;i++){
+  }else if(id==='officers-investigation'){
+    expect(within(preparation).queryByText('CONTENT PLACEHOLDER')).toBeNull();
+    expect(screen.getByText('Print all 22 pages of the Home Investigation Notebook.')).toBeTruthy();
+  }else expect(within(preparation).getByText('CONTENT PLACEHOLDER')).toBeTruthy();
+  for(let i=0;i<variant.steps.length;i++){
     await screen.findByRole('heading',{level:3,name:variant.steps[i].title});
     if(id==='officers-investigation'&&mode==='group'){
       if(i===1)expect(screen.getByText('Print one complete 13-page Team Kit for each team.')).toBeTruthy();
@@ -262,12 +263,18 @@ test.each([
         expect(screen.getByText(/Honey calls on each department/)).toBeTruthy();
       }
     }
-    if(i<9)expect(screen.queryByRole('button',{name:/I’m Ready to Print/})).toBeNull();
-    await user.click(screen.getByRole('button',{name:i===9?/I’m Ready to Print/:i===4?/Continue to How to Play/:/Next step/}));
-    if(i===4)expect(within(preparation).getByText('Completed')).toBeTruthy();
+    if(i<variant.steps.length-1)expect(screen.queryByRole('button',{name:/I’m Ready to Print/})).toBeNull();
+    await user.click(screen.getByRole('button',{name:i===variant.steps.length-1?/I’m Ready to Print/:i===stepCount-1?/Continue to How to Play/:/Next step/}));
+    if(i===stepCount-1)expect(within(preparation).getByText('Completed')).toBeTruthy();
   }
   await screen.findByRole('heading',{name:'You’re ready to print!'});
-  if(id==='officers-investigation'){
+  if(id==='officers-investigation'&&mode==='home'){
+    expect(screen.getByText('PRINTABLE PDF · 22 PAGES')).toBeTruthy();
+    expect(screen.queryByText('Demonstration materials only')).toBeNull();
+    expect(screen.getByRole('link',{name:/Download PDF/}).getAttribute('href')).toBe('./packs/officers-investigation-home-notebook.pdf');
+    expect(screen.queryByRole('heading',{name:'Facilitator File'})).toBeNull();
+  }
+  if(id==='officers-investigation'&&mode==='group'){
     if(mode==='group'){
       expect(screen.getByText('Print-heavy: 13 pages per team · one shared investigation notebook')).toBeTruthy();
       expect(screen.getByText('PRINTABLE PDF · 13 PAGES')).toBeTruthy();

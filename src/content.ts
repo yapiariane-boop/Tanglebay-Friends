@@ -321,6 +321,60 @@ const wildPathGroupGameplay: Step[] = [
   }
 ];
 
+const investigationHomePreparation: Step[] = [
+  {
+    "id": "home-prepare-1",
+    "title": "Print Your Investigation Notebook",
+    "lead": "Print all 22 pages of the Home Investigation Notebook.",
+    "body": "Check the paper size and scaling in print preview so that the instructions, writing spaces and craft templates remain readable."
+  },
+  {
+    "id": "home-prepare-2",
+    "title": "Keep Your Pages in Order",
+    "lead": "Keep the pages in their original order with a paper clip.",
+    "body": "Some pages contain pieces to cut out, so leave those accessible. You can staple the remaining investigation pages together to keep your notes safe."
+  },
+  {
+    "id": "home-prepare-3",
+    "title": "Gather Your Materials",
+    "lead": "Have scissors, glue, a pencil and an eraser ready.",
+    "body": "Keep the craft pieces together as you cut them out."
+  },
+  {
+    "id": "home-prepare-4",
+    "title": "Investigate Together",
+    "lead": "For ages 7–9, we recommend an adult’s support with reading the conversations and understanding the instructions.",
+    "body": "Reading the characters’ parts together can make the investigation a shared adventure. An adult can also help with cutting and hat assembly when needed."
+  }
+];
+
+const investigationHomeGameplay: Step[] = [
+  {
+    "id": "home-play-1",
+    "title": "Follow Honey’s Case",
+    "lead": "Read the notebook in order and follow Honey’s instructions.",
+    "body": "Look carefully at the pictures and conversations: small details may become important later."
+  },
+  {
+    "id": "home-play-2",
+    "title": "Build Your Officer’s Hat",
+    "lead": "Cut out and assemble your Mini Officer’s Hat using the illustrated instructions.",
+    "body": "Choose your department and attach its badge. Keep your hat nearby throughout the investigation."
+  },
+  {
+    "id": "home-play-3",
+    "title": "Read, Investigate and Use Your Equipment",
+    "lead": "Read each interview and record the important details in the Officer’s Notes.",
+    "body": "When you reach a challenge, choose one tool, cut it out and attach it to your hat to activate it. Complete “I chose”, “I used it by” and “This helped because” before continuing. Each tool can only be used once."
+  },
+  {
+    "id": "home-play-4",
+    "title": "Build Your Theory",
+    "lead": "After reading all the conversations, complete one report board for each of the three suspects.",
+    "body": "Consider both the evidence against them and what could suggest they are innocent. Then complete your Final Officer Report and explain how you think the crime happened."
+  }
+];
+
 const investigationGroupPreparation: Step[] = [
   {
     "id": "set-investigation-teams",
@@ -477,13 +531,20 @@ function variant(id: string, title: string, mode: Mode): Variant {
     ];
     return {guidanceSections, guidanceLabel:'ACTIVITY GUIDE',players:group?'One team per table; one Character Card per player':'Each player leads a team of 4 characters',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files:[{id:'activity',title:group?'Team activity kit — The Wild Path':'The Wild Path — Home pack',href:'./packs/the-wild-path-home-pack.pdf',copies:group?'One 8-page pack per team · approx. 29 MB':'8 pages · approx. 29 MB · board, Character Cards, reference maps, tokens and Chunky Dice',placeholder:false,pageCount:8}],comingSoonFiles:group?['Facilitation Guide']:undefined,printing:'The pack includes the board (page 1), Challenge Map (page 2), tokens (page 3), Chunky Dice (page 4), Misery & Bonuses Map (page 5), and Character Cards (pages 6–8). The PDF uses large custom page sizes: check your paper size and scaling in print preview before printing. Keep both reference maps readable. Use a regular die if you prefer to skip the dice craft.'};
   }
+  if (id === 'officers-investigation' && !group) {
+    const guidanceSections: GuidanceSection[] = [
+      {id:'preparation',title:'Prepare the Game',description:'Four steps to get everything ready.',placeholder:false,steps:investigationHomePreparation},
+      {id:'gameplay',title:'How to Play',description:'Four steps to follow your investigation.',placeholder:false,steps:investigationHomeGameplay},
+    ];
+    return {guidanceSections,guidanceLabel:'ACTIVITY GUIDE',players:'Ages 7–11 · adult reading support recommended for ages 7–9',duration:'45–90 minutes, or completed over several sessions',printNotice:'Home investigation notebook · 22 pages to print.',steps:guidanceSections.flatMap(section=>section.steps),files:[{id:'activity',title:'Home Investigation Notebook',href:'./packs/officers-investigation-home-notebook.pdf',copies:'22-page investigation notebook · approx. 3.3 MB',placeholder:false,pageCount:22}],printing:'Print all 22 PDF pages and keep them in order with a paper clip. Leave craft pages accessible for cutting; staple the remaining investigation pages if you wish. Check paper size and scaling in print preview before printing.'};
+  }
   if (id === 'dimitris-lab' || id === 'officers-investigation') {
     const authoredInvestigationGroup=id==='officers-investigation'&&group;
     const guidanceSections: GuidanceSection[] = [
-      {id:'preparation',title:'Prepare the Game',description:'Five steps to get everything ready.',placeholder:!authoredInvestigationGroup,steps:authoredInvestigationGroup?investigationGroupPreparation:Array.from({length:5},(_,i)=>({id:`prepare-${i+1}`,title:`Preparation step ${i+1}`,body:id==='officers-investigation'&&!group&&i===0?'The Home activity is an investigation notebook with approximately 18–20 pages to print. The final Home PDF is coming soon.':'Preparation instructions will be added here.'}))},
+      {id:'preparation',title:'Prepare the Game',description:'Five steps to get everything ready.',placeholder:!authoredInvestigationGroup,steps:authoredInvestigationGroup?investigationGroupPreparation:Array.from({length:5},(_,i)=>({id:`prepare-${i+1}`,title:`Preparation step ${i+1}`,body:'Preparation instructions will be added here.'}))},
       {id:'gameplay',title:'How to Play',description:'Five steps to understand the gameplay.',placeholder:!authoredInvestigationGroup,steps:authoredInvestigationGroup?investigationGroupGameplay:Array.from({length:5},(_,i)=>({id:`play-${i+1}`,title:`Gameplay step ${i+1}`,body:'Gameplay instructions will be added here.'}))},
     ];
-    return {guidanceSections,printNotice:authoredInvestigationGroup?'Print-heavy: 13 pages per team. The Team Kit is a shared investigation notebook; facilitator materials are separate.':id==='officers-investigation'?'Home investigation notebook · approximately 18–20 pages to print. Final PDF coming soon.':undefined,guidanceLabel:authoredInvestigationGroup?'ACTIVITY GUIDE':'CONTENT PLACEHOLDER',players:authoredInvestigationGroup?'Small Investigation Teams with a facilitator':group?'Group setup details coming soon':'Home setup details coming soon',duration:authoredInvestigationGroup?'Around 45–60 minutes, depending on team size and discussion time.':'',steps:guidanceSections.flatMap(section=>section.steps),files:id==='officers-investigation'?[{...files[0],title:'Team Kit',...(group?{href:'./packs/officers-investigation-group-team-kit.pdf',placeholder:false,pageCount:13}:{}),copies:group?'Print-heavy: 13 pages per team · one shared investigation notebook':'Home investigation notebook · approximately 18–20 pages to print · final PDF coming soon'},...(group?[{id:'facilitator',title:'Facilitator File',href:'./packs/officers-investigation-group-facilitator.pdf',copies:'15-page facilitator guide · keep separate from the Team Kit',placeholder:false,pageCount:15}]:[])]:files,comingSoonFiles:id==='officers-investigation'&&!group?['Facilitator File']:undefined,printing:authoredInvestigationGroup?'Print one 13-page Team Kit per Investigation Team. This print-heavy pack is designed as a shared investigation notebook. Use the separate 15-page Facilitator File to lead the investigation. Keep it and the Actor Cards with the facilitator.':id==='officers-investigation'?'The Home activity is an investigation notebook with approximately 18–20 pages to print. The final Home PDF and detailed printing instructions are coming soon.':'Printing instructions will be added with the final activity materials.'};
+    return {guidanceSections,printNotice:authoredInvestigationGroup?'Print-heavy: 13 pages per team. The Team Kit is a shared investigation notebook; facilitator materials are separate.':id==='officers-investigation'?'Home investigation notebook · 22 pages to print.':undefined,guidanceLabel:authoredInvestigationGroup?'ACTIVITY GUIDE':'CONTENT PLACEHOLDER',players:authoredInvestigationGroup?'Small Investigation Teams with a facilitator':group?'Group setup details coming soon':'Home setup details coming soon',duration:authoredInvestigationGroup?'Around 45–60 minutes, depending on team size and discussion time.':'',steps:guidanceSections.flatMap(section=>section.steps),files:id==='officers-investigation'?[{...files[0],title:'Team Kit',...(group?{href:'./packs/officers-investigation-group-team-kit.pdf',placeholder:false,pageCount:13}:{}),copies:group?'Print-heavy: 13 pages per team · one shared investigation notebook':'Home investigation notebook · 22 pages to print'},...(group?[{id:'facilitator',title:'Facilitator File',href:'./packs/officers-investigation-group-facilitator.pdf',copies:'15-page facilitator guide · keep separate from the Team Kit',placeholder:false,pageCount:15}]:[])]:files,comingSoonFiles:id==='officers-investigation'&&!group?['Facilitator File']:undefined,printing:authoredInvestigationGroup?'Print one 13-page Team Kit per Investigation Team. This print-heavy pack is designed as a shared investigation notebook. Use the separate 15-page Facilitator File to lead the investigation. Keep it and the Actor Cards with the facilitator.':id==='officers-investigation'?'Print the 22-page Home investigation notebook and keep the pages in order.':'Printing instructions will be added with the final activity materials.'};
   }
   return {players:group?'Example: 4–12 players in small teams':'Example: 1–3 players with an adult',duration:'Example: 20–30 minutes',printing:group?'Keep the facilitator resources separate. Confirm team numbers before printing.':'Keep each player’s workbook together. Confirm how many players need a copy.',files,steps:[
     {id:'welcome',title:`Prepare ${title}`,body:group?'This example uses shared team materials and an adult facilitator.':'This example uses a complete workbook and an adult helper.',items:[group?'Share one kit within each team.':'Give each player their own workbook.','All instructions here are placeholders awaiting author review.']},
