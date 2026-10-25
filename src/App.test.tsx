@@ -212,7 +212,7 @@ test.each(['home','group'] as const)('Wild Path %s has stacked preparation and g
 });
 
 test.each([
-  ['dimitris-lab','home'],['dimitris-lab','group'],
+  ['dimitris-lab','group'],
   ['officers-investigation','home'],['officers-investigation','group'],
 ] as const)('%s %s completes both guidance sections before printing',async(id,mode)=>{
   window.location.hash=`/episodes/episode-1/activities/${id}`;
@@ -280,12 +280,6 @@ test.each([
     if(i===stepCount-1)expect(within(preparation).getByText('Completed')).toBeTruthy();
   }
   await screen.findByRole('heading',{name:'You’re ready to print!'});
-  if(id==='dimitris-lab'&&mode==='home'){
-    expect(screen.getByRole('heading',{name:'Inside Dimitri’s Lab — Home Kit'})).toBeTruthy();
-    expect(screen.getByText('PRINTABLE PDF · 6 PAGES')).toBeTruthy();
-    expect(screen.queryByText('Demonstration materials only')).toBeNull();
-    expect(screen.getByRole('link',{name:/Download PDF/}).getAttribute('href')).toBe('./packs/dimitris-lab-home-kit.pdf');
-  }
   if(id==='dimitris-lab'&&mode==='group'){
     for(const [title,href,pages] of [
       ['Research Guidance Sheet','./packs/dimitris-lab-research-guidance-sheet.pdf',1],
@@ -327,4 +321,32 @@ test.each([
       expect(within(facilitatorCard).queryByRole('link')).toBeNull();
     }
   }
+});
+
+
+test('Dimitri lab home uses five slides and explains reusable research pages',async()=>{
+  window.location.hash='/episodes/episode-1/activities/dimitris-lab';
+  render(<App/>);const user=userEvent.setup();
+  await user.click(screen.getByRole('button',{name:/I’m playing at home/}));
+  const expected=['Revisit the Biology Secrets','Get Your Research Kit Ready','Become Dimitri’s Research Assistant','Investigate Nature’s Ideas','Share Your Discoveries'];
+  expect(screen.queryByRole('region',{name:'Prepare the Game'})).toBeNull();
+  for(let i=0;i<expected.length;i++){
+    await screen.findByRole('heading',{level:2,name:expected[i]});
+    expect(screen.getByText(`Step ${i+1} of 5`)).toBeTruthy();
+    expect(screen.queryByRole('link',{name:/Download PDF/})).toBeNull();
+    if(i===3)expect(screen.getByText(/CHALLENGE → ADAPTATION → CONSEQUENCES → HUMAN COPYCATS/)).toBeTruthy();
+    if(i===4){
+      expect(screen.getByText(/reprint only the three research pages/)).toBeTruthy();
+      await user.click(screen.getByRole('button',{name:'Previous step'}));
+      await screen.findByRole('heading',{level:2,name:expected[3]});
+      await user.click(screen.getByRole('button',{name:/Next step/}));
+      await screen.findByRole('heading',{level:2,name:expected[4]});
+    }
+    await user.click(screen.getByRole('button',{name:i===4?/I’m Ready to Print/:/Next step/}));
+  }
+  await screen.findByRole('heading',{name:'You’re ready to print!'});
+  expect(screen.getByText(/pages 4–6 of the current PDF/)).toBeTruthy();
+  expect(screen.getByText('PRINTABLE PDF · 6 PAGES')).toBeTruthy();
+  expect(screen.getByRole('link',{name:/Download PDF/}).getAttribute('href')).toBe('./packs/dimitris-lab-home-kit.pdf');
+  expect(screen.queryByText('Demonstration materials only')).toBeNull();
 });

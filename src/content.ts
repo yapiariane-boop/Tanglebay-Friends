@@ -321,6 +321,43 @@ const wildPathGroupGameplay: Step[] = [
   }
 ];
 
+const labHomeSteps: Step[] = [
+  {
+    "id": "revisit-biology",
+    "title": "Revisit the Biology Secrets",
+    "body": "Read the Tanglebay Biology Secrets section at the end of the book. Choose a character and take another look at their animal adaptation. What makes their biology special?"
+  },
+  {
+    "id": "prepare-research-kit",
+    "title": "Get Your Research Kit Ready",
+    "body": "Print the Home Kit and grab a pencil. Have scissors and glue ready if you’re adding your character’s picture. Your research adventure starts here!"
+  },
+  {
+    "id": "sign-contract",
+    "title": "Become Dimitri’s Research Assistant",
+    "body": "Read and sign your assistant contract. Then explore your Command Center: start as a Junior Researcher with Ricky, Erica and Honey, before moving on to Dimitri, Mimi and Leon."
+  },
+  {
+    "id": "investigate-nature",
+    "title": "Investigate Nature’s Ideas",
+    "body": "Complete your chosen character’s research pages. Describe their biology secret in your own words, then explore CHALLENGE → ADAPTATION → CONSEQUENCES → HUMAN COPYCATS.",
+    "items": [
+      "What problem did the animal face?",
+      "What solution did nature develop?",
+      "What changed because of it?",
+      "Can you find human inventions or habits that use a similar idea? Unexpected ideas are welcome — explain how yours connect!"
+    ]
+  },
+  {
+    "id": "share-discoveries",
+    "title": "Share Your Discoveries",
+    "body": "Show your findings to family or friends. Explain your favourite Human Copycats and ask what examples they can think of. Tick off the character in your Command Center, then choose another friend whenever you’re ready.",
+    "items": [
+      "For each new character, reprint only the three research pages (pages 4–6 of the current PDF). Keep your contract and Command Center."
+    ]
+  }
+];
+
 const labGroupPreparation: Step[] = [
   {
     "id": "lab-prepare-1",
@@ -642,6 +679,10 @@ function variant(id: string, title: string, mode: Mode): Variant {
     ];
     return {guidanceSections, guidanceLabel:'ACTIVITY GUIDE',players:group?'One team per table; one Character Card per player':'Each player leads a team of 4 characters',duration:'',steps:guidanceSections.flatMap(section=>section.steps),files:[{id:'activity',title:group?'Team activity kit — The Wild Path':'The Wild Path — Home pack',href:'./packs/the-wild-path-home-pack.pdf',copies:group?'One 8-page pack per team · approx. 29 MB':'8 pages · approx. 29 MB · board, Character Cards, reference maps, tokens and Chunky Dice',placeholder:false,pageCount:8}],comingSoonFiles:group?['Facilitation Guide']:undefined,printing:'The pack includes the board (page 1), Challenge Map (page 2), tokens (page 3), Chunky Dice (page 4), Misery & Bonuses Map (page 5), and Character Cards (pages 6–8). The PDF uses large custom page sizes: check your paper size and scaling in print preview before printing. Keep both reference maps readable. Use a regular die if you prefer to skip the dice craft.'};
   }
+  if (id === 'dimitris-lab' && !group) return {
+    guidanceLabel:'RESEARCH GUIDANCE',players:'Explore independently or share your discoveries with family and friends',duration:'',steps:labHomeSteps,files,
+    printing:'Print the Home Kit once to get started. For each new character, reprint only the three research pages (pages 4–6 of the current PDF); keep your contract and Command Center. Check paper size and scaling in print preview before printing.',
+  };
   if (id === 'dimitris-lab' && group) {
     const guidanceSections: GuidanceSection[] = [
       {id:'preparation',title:'Prepare the Game',description:'Before you begin: four steps to prepare your research.',placeholder:false,steps:labGroupPreparation},
