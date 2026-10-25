@@ -261,13 +261,24 @@ test.each([
   }
   await screen.findByRole('heading',{name:'You’re ready to print!'});
   if(id==='officers-investigation'){
-    if(mode==='group')expect(screen.getByText('Print-heavy: 22 pages per team · one shared investigation notebook')).toBeTruthy();
+    if(mode==='group'){
+      expect(screen.getByText('Print-heavy: 13 pages per team · one shared investigation notebook')).toBeTruthy();
+      expect(screen.getByText('PRINTABLE PDF · 13 PAGES')).toBeTruthy();
+      expect(screen.queryByText('Demonstration materials only')).toBeNull();
+      expect(screen.getAllByRole('link',{name:/Download PDF/}).map(link=>link.getAttribute('href'))).toEqual(['./packs/officers-investigation-group-team-kit.pdf','./packs/officers-investigation-group-facilitator.pdf']);
+    }
     expect(screen.getByRole('heading',{name:'Team Kit'})).toBeTruthy();
     expect(screen.getByRole('heading',{name:'Facilitator File'})).toBeTruthy();
     expect(document.querySelectorAll('.file-card')).toHaveLength(2);
     expect(screen.queryByRole('heading',{name:'Evidence materials'})).toBeNull();
     const facilitatorCard=screen.getByRole('heading',{name:'Facilitator File'}).closest('article')!;
-    expect(within(facilitatorCard).getByText('COMING SOON')).toBeTruthy();
-    expect(within(facilitatorCard).queryByRole('link')).toBeNull();
+    if(mode==='group'){
+      expect(within(facilitatorCard).getByText('PRINTABLE PDF · 15 PAGES')).toBeTruthy();
+      expect(within(facilitatorCard).getByRole('link',{name:/Download PDF/}).getAttribute('href')).toBe('./packs/officers-investigation-group-facilitator.pdf');
+      expect(within(facilitatorCard).queryByText('COMING SOON')).toBeNull();
+    }else{
+      expect(within(facilitatorCard).getByText('COMING SOON')).toBeTruthy();
+      expect(within(facilitatorCard).queryByRole('link')).toBeNull();
+    }
   }
 });
