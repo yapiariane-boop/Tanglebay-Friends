@@ -254,7 +254,7 @@ const wildPathGroupPreparation: Step[] = [
     "id": "create-team-ids",
     "title": "Create Your Team Codes",
     "lead": "Prepare a hidden colour or code for each team, with four matching slips per team.",
-    "body": "Play with up to 12 character players in three teams of four. For three teams, prepare twelve slips. Choose which children will play as characters and which will be Judges. Other children can join as Judges.\nFold the slips to hide their codes and place them in a container at the shared draw station."
+    "body": "Play with up to 12 character players in three teams of four. If there are more than 12 children, the facilitator chooses the 12 who will play as characters; all remaining children become Judges. The facilitator also acts as a Judge alongside them. Only character players draw a Team Code and a Character Card. For three teams, prepare twelve slips.\nFold the slips to hide their codes and place them in a container at the shared draw station."
   },
   {
     "id": "group-prepare-game",

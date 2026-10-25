@@ -180,7 +180,12 @@ test.each(['home','group'] as const)('Wild Path %s has stacked preparation and g
     await screen.findByRole('heading',{level:3,name:variant.steps[i].title});
     if(mode==='home'&&i===4)expect(screen.getByText('Now it’s time to build your teams.')).toBeTruthy();
     if(mode==='group'){
-      if(i===1)expect(screen.getByText(/up to 12 character players in three teams of four/)).toBeTruthy();
+      if(i===1){
+        expect(screen.getByText(/up to 12 character players in three teams of four/)).toBeTruthy();
+        expect(screen.getByText(/all remaining children become Judges/)).toBeTruthy();
+        expect(screen.getByText(/facilitator also acts as a Judge/)).toBeTruthy();
+        expect(screen.getByText(/Only character players draw a Team Code and a Character Card/)).toBeTruthy();
+      }
       if(i===2)expect(screen.getByText('Cut out the 14 Character Cards and shuffle them into one shared deck.')).toBeTruthy();
       if(i===3){
         expect(screen.getByText('Each player draws one folded Team Code and one Character Card from the shared deck.')).toBeTruthy();
