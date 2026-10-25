@@ -9,7 +9,7 @@ export const logoArtwork = { src: './artwork/logo-crab.webp' };
 export const homeArtwork = { src: './artwork/scientist-home-transparent.webp', alt: 'A smiling Tanglebay scientist character in a white lab coat, raising a claw.' };
 export type Mode = 'home' | 'group';
 export type GuidanceVisual = 'teams' | 'scene' | 'discuss' | 'refine' | 'flip' | 'opponent' | 'stand' | 'position' | 'case' | 'judges' | 'arena' | 'group-position' | 'group-judges' | 'questions';
-export interface Step { prompts?:string[]; after?:string; lead?:string; closing?:string; visual?: GuidanceVisual; id: string; title: string; body: string; items?: string[] }
+export interface Step { roles?: {title:string;body:string}[]; prompts?:string[]; after?:string; lead?:string; closing?:string; visual?: GuidanceVisual; id: string; title: string; body: string; items?: string[] }
 export interface GuidanceSection { placeholder?:boolean; id:string; title:string; description:string; steps:Step[] }
 export interface PackFile { id: string; title: string; href: string; copies: string; optional?: boolean; placeholder?: boolean; pageCount?: number }
 export interface DuplexGuide { previews: {src:string; alt:string; label:string}[]; flipEdge: string; orientation:string; cards:number }
@@ -358,25 +358,51 @@ const investigationGroupGameplay: Step[] = [
   {
     "id": "make-investigator-hat",
     "title": "Make Your Investigator Hat",
-    "lead": "Follow the instructions in your Team Kit to cut out and assemble your team’s Investigator Hat.",
-    "body": "Choose a Tanglebay department, then cut out its crest and glue it onto the front of your hat.\nWith four teams or fewer, try to choose a different department for each team. With more than four teams, departments can be shared. Your department name will help Honey call on your team during the final presentations."
+    "body": "",
+    "roles": [
+      {
+        "title": "Teams",
+        "body": "The children in each team follow the Team Kit instructions to cut out and assemble one shared Investigator Hat for their team. They choose a Tanglebay department, cut out its crest and glue it onto the front of their hat."
+      },
+      {
+        "title": "Facilitator",
+        "body": "Help teams follow the craft instructions and coordinate department choices. With four teams or fewer, try to give each team a different department. With more than four teams, departments can be shared. Use department names to call on teams during the final presentations."
+      }
+    ]
   },
   {
     "id": "enter-investigation-scene",
     "title": "Open the Case with Bridget’s Interview",
-    "lead": "Watch the child playing Bridget perform the opening interview with the facilitator as Honey.",
-    "body": "Bridget is the victim: her interview introduces the case, so there is no challenge before it.\nWhile watching, the other team members listen carefully and jot down important details on scrap paper. After the interview, Honey gives teams five minutes to compare their notes and complete the official Interview Notes in their kit."
+    "body": "",
+    "roles": [
+      {
+        "title": "Teams",
+        "body": "The child playing Bridget performs the scene with Honey. The other children watch, listen carefully and take rough notes on scrap paper. Afterwards, teams use the five minutes provided to compare their notes and complete the official Interview Notes in their kit."
+      },
+      {
+        "title": "Facilitator",
+        "body": "Play Honey opposite the child playing Bridget. Bridget is the victim: her interview opens the case, so there is no challenge before it. Keep the scripts with you, giving the actor access only to their own script briefly before and during the scene. Allow five minutes after the interview for teams to put their notes together."
+      }
+    ]
   },
   {
     "id": "investigation-challenge",
     "title": "Complete a Challenge to Unlock the Next Interview",
-    "lead": "Read the situation presented by Honey and discuss which tool could help your team investigate it.",
-    "body": "Cut your chosen tool out of the equipment sheet and glue it onto your Investigator Hat to activate it. Then complete the challenge sheet, explaining which tool you chose, why you chose it and how you would use it.\nEach tool can only be used once. Once teams have completed the challenge and their explanations, Honey moves on to the next suspect interview."
+    "body": "",
+    "roles": [
+      {
+        "title": "Teams",
+        "body": "Read the situation and discuss which tool could help. The children choose a tool, cut it out and glue it onto their Investigator Hat to activate it. Then complete the challenge sheet, explaining which tool they chose, why they chose it and how they would use it. Each tool can only be used once."
+      },
+      {
+        "title": "Facilitator",
+        "body": "Present the challenge situation. Once teams have completed the challenge and their explanations, lead the next suspect interview as Honey with the child playing that character."
+      }
+    ]
   },
   {
     "id": "repeat-investigation-cycle",
     "title": "Repeat the Investigation Cycle",
-    "lead": "Watch each suspect interview, take rough notes during the scene, then use the five minutes afterwards to discuss what you heard and complete your official Interview Notes.",
     "body": "The full case follows this order:",
     "items": [
       "Bridget’s interview → notes",
@@ -384,13 +410,32 @@ const investigationGroupGameplay: Step[] = [
       "Challenge 2 → suspect interview → notes",
       "Challenge 3 → final suspect interview → notes"
     ],
-    "after": "There are four interviews and three challenges in total."
+    "after": "There are four interviews and three challenges in total.",
+    "roles": [
+      {
+        "title": "Teams",
+        "body": "Repeat the cycle: solve the challenge, watch the interview and take rough notes, then use the five minutes afterwards to discuss what you heard and complete your official Interview Notes."
+      },
+      {
+        "title": "Facilitator",
+        "body": "Lead the three challenges and suspect interviews in order. Keep interview scripts with you and allow five minutes after every interview for teams to complete their notes."
+      }
+    ]
   },
   {
     "id": "case-conference",
     "title": "Compare the Suspects and Present Your Findings",
-    "lead": "After the final interview, complete the three Suspect Files together — one for each suspect.",
-    "body": "Consider the evidence that makes each person suspicious and the evidence that could suggest they are innocent.\nThen complete your Final Report and agree on your team’s conclusion. Honey calls on each department to present its findings and explain its reasoning.\nOnce every team has presented, Honey reveals what really happened."
+    "body": "",
+    "roles": [
+      {
+        "title": "Teams",
+        "body": "After the final interview, complete the three Suspect Files together — one for each suspect. Discuss the evidence that makes each person suspicious and the evidence that could suggest they are innocent. Complete your Final Report, agree on your conclusion and present your department’s findings and reasoning."
+      },
+      {
+        "title": "Facilitator",
+        "body": "Honey calls on each department to present its findings. Once every team has presented, reveal what really happened."
+      }
+    ]
   }
 ];
 
@@ -435,10 +480,10 @@ function variant(id: string, title: string, mode: Mode): Variant {
   if (id === 'dimitris-lab' || id === 'officers-investigation') {
     const authoredInvestigationGroup=id==='officers-investigation'&&group;
     const guidanceSections: GuidanceSection[] = [
-      {id:'preparation',title:'Prepare the Game',description:'Five steps to get everything ready.',placeholder:!authoredInvestigationGroup,steps:authoredInvestigationGroup?investigationGroupPreparation:Array.from({length:5},(_,i)=>({id:`prepare-${i+1}`,title:`Preparation step ${i+1}`,body:'Preparation instructions will be added here.'}))},
+      {id:'preparation',title:'Prepare the Game',description:'Five steps to get everything ready.',placeholder:!authoredInvestigationGroup,steps:authoredInvestigationGroup?investigationGroupPreparation:Array.from({length:5},(_,i)=>({id:`prepare-${i+1}`,title:`Preparation step ${i+1}`,body:id==='officers-investigation'&&!group&&i===0?'The Home activity is an investigation notebook with approximately 18–20 pages to print. The final Home PDF is coming soon.':'Preparation instructions will be added here.'}))},
       {id:'gameplay',title:'How to Play',description:'Five steps to understand the gameplay.',placeholder:!authoredInvestigationGroup,steps:authoredInvestigationGroup?investigationGroupGameplay:Array.from({length:5},(_,i)=>({id:`play-${i+1}`,title:`Gameplay step ${i+1}`,body:'Gameplay instructions will be added here.'}))},
     ];
-    return {guidanceSections,printNotice:authoredInvestigationGroup?'Print-heavy: 13 pages per team. The Team Kit is a shared investigation notebook; facilitator materials are separate.':undefined,guidanceLabel:authoredInvestigationGroup?'ACTIVITY GUIDE':'CONTENT PLACEHOLDER',players:authoredInvestigationGroup?'Small Investigation Teams with a facilitator':group?'Group setup details coming soon':'Home setup details coming soon',duration:authoredInvestigationGroup?'Around 45–60 minutes, depending on team size and discussion time.':'',steps:guidanceSections.flatMap(section=>section.steps),files:id==='officers-investigation'?[{...files[0],title:'Team Kit',...(group?{href:'./packs/officers-investigation-group-team-kit.pdf',placeholder:false,pageCount:13}:{}),copies:group?'Print-heavy: 13 pages per team · one shared investigation notebook':files[0].copies},...(group?[{id:'facilitator',title:'Facilitator File',href:'./packs/officers-investigation-group-facilitator.pdf',copies:'15-page facilitator guide · keep separate from the Team Kit',placeholder:false,pageCount:15}]:[])]:files,comingSoonFiles:id==='officers-investigation'&&!group?['Facilitator File']:undefined,printing:authoredInvestigationGroup?'Print one 13-page Team Kit per Investigation Team. This print-heavy pack is designed as a shared investigation notebook. Use the separate 15-page Facilitator File to lead the investigation. Keep it and the Actor Cards with the facilitator.':id==='officers-investigation'?'Keep the Facilitator File separate from the Team Kit. Final printing instructions and copy counts will be added when the files are ready.':'Printing instructions will be added with the final activity materials.'};
+    return {guidanceSections,printNotice:authoredInvestigationGroup?'Print-heavy: 13 pages per team. The Team Kit is a shared investigation notebook; facilitator materials are separate.':id==='officers-investigation'?'Home investigation notebook · approximately 18–20 pages to print. Final PDF coming soon.':undefined,guidanceLabel:authoredInvestigationGroup?'ACTIVITY GUIDE':'CONTENT PLACEHOLDER',players:authoredInvestigationGroup?'Small Investigation Teams with a facilitator':group?'Group setup details coming soon':'Home setup details coming soon',duration:authoredInvestigationGroup?'Around 45–60 minutes, depending on team size and discussion time.':'',steps:guidanceSections.flatMap(section=>section.steps),files:id==='officers-investigation'?[{...files[0],title:'Team Kit',...(group?{href:'./packs/officers-investigation-group-team-kit.pdf',placeholder:false,pageCount:13}:{}),copies:group?'Print-heavy: 13 pages per team · one shared investigation notebook':'Home investigation notebook · approximately 18–20 pages to print · final PDF coming soon'},...(group?[{id:'facilitator',title:'Facilitator File',href:'./packs/officers-investigation-group-facilitator.pdf',copies:'15-page facilitator guide · keep separate from the Team Kit',placeholder:false,pageCount:15}]:[])]:files,comingSoonFiles:id==='officers-investigation'&&!group?['Facilitator File']:undefined,printing:authoredInvestigationGroup?'Print one 13-page Team Kit per Investigation Team. This print-heavy pack is designed as a shared investigation notebook. Use the separate 15-page Facilitator File to lead the investigation. Keep it and the Actor Cards with the facilitator.':id==='officers-investigation'?'The Home activity is an investigation notebook with approximately 18–20 pages to print. The final Home PDF and detailed printing instructions are coming soon.':'Printing instructions will be added with the final activity materials.'};
   }
   return {players:group?'Example: 4–12 players in small teams':'Example: 1–3 players with an adult',duration:'Example: 20–30 minutes',printing:group?'Keep the facilitator resources separate. Confirm team numbers before printing.':'Keep each player’s workbook together. Confirm how many players need a copy.',files,steps:[
     {id:'welcome',title:`Prepare ${title}`,body:group?'This example uses shared team materials and an adult facilitator.':'This example uses a complete workbook and an adult helper.',items:[group?'Share one kit within each team.':'Give each player their own workbook.','All instructions here are placeholders awaiting author review.']},

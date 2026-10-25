@@ -228,7 +228,10 @@ test.each([
   if(id==='officers-investigation'&&mode==='group'){
     expect(within(preparation).queryByText('CONTENT PLACEHOLDER')).toBeNull();
     expect(screen.getByText('Divide the children into small Investigation Teams.')).toBeTruthy();
-  }else expect(within(preparation).getByText('CONTENT PLACEHOLDER')).toBeTruthy();
+  }else {
+    expect(within(preparation).getByText('CONTENT PLACEHOLDER')).toBeTruthy();
+    if(id==='officers-investigation')expect(within(preparation).getByText(/approximately 18–20 pages to print/)).toBeTruthy();
+  }
   for(let i=0;i<10;i++){
     await screen.findByRole('heading',{level:3,name:variant.steps[i].title});
     if(id==='officers-investigation'&&mode==='group'){
@@ -236,13 +239,17 @@ test.each([
       if(i===2)expect(screen.getByText('Choose four children to play Bridget, Octena, Deedee and Moow.')).toBeTruthy();
       if(i===3)expect(screen.getByText(/Give each actor access only to their own script/)).toBeTruthy();
       if(i===4)expect(screen.getByText(/paper scissors, glue and a pen/)).toBeTruthy();
+      if(i>=5){
+        expect(within(gameplay).getByRole('region',{name:'Teams'})).toBeTruthy();
+        expect(within(gameplay).getByRole('region',{name:'Facilitator'})).toBeTruthy();
+      }
       if(i===5){
         expect(within(gameplay).queryByText('CONTENT PLACEHOLDER')).toBeNull();
         expect(screen.getByText(/With four teams or fewer/)).toBeTruthy();
       }
       if(i===6)expect(screen.getByText(/there is no challenge before it/)).toBeTruthy();
       if(i===7){
-        expect(screen.getByText(/glue it onto your Investigator Hat to activate it/)).toBeTruthy();
+        expect(screen.getByText(/glue it onto their Investigator Hat to activate it/)).toBeTruthy();
         expect(screen.getByText(/Each tool can only be used once/)).toBeTruthy();
       }
       if(i===8){

@@ -60,3 +60,5 @@ Inside Dimitri’s Lab and Officer’s Investigation Notebook use two five-step 
 Officer’s Investigation Notebook reserves two print areas in both setups: Team Kit and Facilitator File. The Group Team Kit uses the author-supplied 13-page PDF `public/packs/officers-investigation-group-team-kit.pdf` (about 23 MB); the Home kit remains a labelled demonstration PDF. The Group Facilitator File uses the author-supplied 15-page PDF `public/packs/officers-investigation-group-facilitator.pdf` (about 28 MB), separate from the Team Kit; the Home facilitator area remains Coming soon. Earlier example evidence and guide downloads are not presented as additional packs.
 
 Sectioned steps support optional `prompts` callouts and `after` text so response stems and reflection questions remain distinct while preserving the intended instruction order.
+
+Investigation Group gameplay separates Teams and Facilitator responsibilities in every step. Children craft one shared hat per team. Home setup announces an investigation notebook of approximately 18–20 pages to print; the final Home PDF is pending.

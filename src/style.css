@@ -55,3 +55,5 @@ html,body{background-color:#ffd5af;color-scheme:light}.artwork-picker button{mar
 .section-step-items{padding-left:22px;font-size:14px;line-height:1.6}.section-step-items li{margin:9px 0}
 
 .section-step-prompts{list-style:none;margin:16px 0;padding:14px 18px;background:#fff9e9;border-left:3px solid #6b907d;border-radius:0 8px 8px 0;font-size:14px;font-weight:650;line-height:1.6}.section-step-prompts li+li{margin-top:8px}
+
+.step-roles{display:grid;gap:1rem;margin:1.25rem 0}.step-role{padding:1rem 1.25rem;border:1px solid currentColor;border-radius:12px}.step-role h4{margin:0 0 .5rem}.step-role p{margin:0}
