@@ -281,14 +281,18 @@ test.each([
   }
   await screen.findByRole('heading',{name:'You’re ready to print!'});
   if(id==='dimitris-lab'&&mode==='group'){
-    for(const title of ['Research Guidance Sheet','Complete Lab Pack']){
+    for(const [title,href,pages] of [
+      ['Research Guidance Sheet','./packs/dimitris-lab-research-guidance-sheet.pdf',1],
+      ['Complete Lab Pack','./packs/dimitris-lab-group-team-kit.pdf',6],
+    ] as const){
       const card=screen.getByRole('heading',{name:title}).closest('article')!;
-      expect(within(card).getByText('COMING SOON')).toBeTruthy();
-      expect(within(card).queryByRole('link')).toBeNull();
+      expect(within(card).getByText(`PRINTABLE PDF · ${pages} PAGES`)).toBeTruthy();
+      expect(within(card).getByRole('link',{name:/Download PDF/}).getAttribute('href')).toBe(href);
+      expect(within(card).queryByText('COMING SOON')).toBeNull();
     }
-    expect(screen.getByText('One copy per child · PDF coming soon.')).toBeTruthy();
-    expect(screen.getByText('One copy per Research Team · PDF coming soon.')).toBeTruthy();
-    expect(screen.queryByRole('link',{name:/Download PDF/})).toBeNull();
+    expect(screen.getByText('One copy per child · 1 page')).toBeTruthy();
+    expect(screen.getByText('One copy per Research Team · 6 pages')).toBeTruthy();
+    expect(screen.queryByText('Demonstration materials only')).toBeNull();
   }
   if(id==='officers-investigation'&&mode==='home'){
     expect(screen.getByText('PRINTABLE PDF · 22 PAGES')).toBeTruthy();
