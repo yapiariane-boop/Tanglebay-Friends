@@ -149,6 +149,8 @@ test.each(['home','group'] as const)('5 Seconds for a Stand %s guidance covers j
   await screen.findByRole('heading',{name:'You’re ready to print!'});
   expect(screen.getByRole('link',{name:/Download PDF/}).getAttribute('href')).toBe('./packs/five-seconds-for-a-stand.pdf');
   expect(screen.getByText('PRINTABLE PDF · 5 PAGES')).toBeTruthy();
+  expect(screen.queryByRole('heading',{name:'Facilitation Guide'})).toBeNull();
+  expect(screen.queryByText('COMING SOON')).toBeNull();
   expect(screen.queryByText('Demonstration materials only')).toBeNull();
   {
     const assembly=screen.getByRole('region',{name:'Build your 3D button'});

@@ -661,7 +661,6 @@ function variant(id: string, title: string, mode: Mode): Variant {
     steps:group?standGroupSteps:standHomeSteps,
     cubeAssembly:{patternSrc:'./artwork/stand-cube-pattern.webp',boardSrc:'./artwork/stand-assembly-board.webp'},
     files:[{id:'activity',title:group?'Team activity kit — 5 Seconds for a Stand':'5 Seconds for a Stand — Home pack',href:'./packs/five-seconds-for-a-stand.pdf',copies:'5-page pack: board, three 3D position templates and question cards',placeholder:false,pageCount:5}],
-    comingSoonFiles:group?['Facilitation Guide']:undefined,
     printing:'Choose the flat or 3D version. For flat play, use the board on page 1 and the questions on page 5. For 3D pieces, also print pages 2–4, then cut and assemble the templates. Cut out the questions, fold them and mix them in a bowl.',
   };
   if (id === 'wild-path') {
