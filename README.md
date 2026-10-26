@@ -70,3 +70,5 @@ Dimitri’s Lab Home downloads the author-supplied seven-page PDF `public/packs/
 Discussion Cards Group includes a static Facilitation Guide above the printing section: illustrated fronts explore what went wrong, backs explore what could be improved, with shared reading and unhurried team reflection. No separate facilitator PDF is required.
 
 Discussion Cards shares the same duplex-printing animation in Home and Group. 5 Seconds for a Stand shares its optional 3D assembly animation in both modes. Both animations appear after Ready to Print, with play/pause controls.
+
+Each activity detail page introduces its experience before Home/Group selection, with authored promotional copy and a manual preview gallery (arrows and thumbnails). Existing images are reused; Investigation omits the outdated preparation overview. 5 Seconds for a Stand highlights fast decisions and competitive persuasion; Discussion Cards highlights reflective exploration. No gallery autoplay is used on these detail pages.

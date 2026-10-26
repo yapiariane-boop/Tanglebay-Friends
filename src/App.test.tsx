@@ -370,3 +370,26 @@ test('Dimitri lab home uses five slides and explains reusable research pages',as
   expect(screen.getByRole('link',{name:/Download PDF/}).getAttribute('href')).toBe('./packs/dimitris-lab-home-kit.pdf');
   expect(screen.queryByText('Demonstration materials only')).toBeNull();
 });
+
+
+test.each(activities)('$title introduces the activity and offers a manual gallery before setup',async activity=>{
+  window.location.hash=`/episodes/episode-1/activities/${activity.id}`;
+  render(<App/>);const user=userEvent.setup();
+  const intro=screen.getByRole('heading',{name:activity.introduction.headline});
+  expect(screen.getByText(activity.introduction.body)).toBeTruthy();
+  const setup=screen.getByRole('heading',{name:'How will you play?'});
+  expect(intro.compareDocumentPosition(setup)&Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  const gallery=screen.getByRole('region',{name:`${activity.title} preview gallery`});
+  const first=gallery.querySelector('img')!.getAttribute('src');
+  await user.click(within(gallery).getByRole('button',{name:'Next preview image'}));
+  expect(gallery.querySelector('img')!.getAttribute('src')).not.toBe(first);
+  await user.click(within(gallery).getByRole('button',{name:'Previous preview image'}));
+  expect(gallery.querySelector('img')!.getAttribute('src')).toBe(first);
+  const thumbnails=within(gallery).getAllByRole('button',{name:/Show preview image/});
+  await user.click(thumbnails[1]);
+  expect(thumbnails[1].getAttribute('aria-pressed')).toBe('true');
+  if(activity.id==='officers-investigation')expect(gallery.querySelector('img[src$="investigation-image-1.webp"]')).toBeNull();
+  await user.click(screen.getByRole('button',{name:/I’m playing at home/}));
+  expect(screen.queryByRole('region',{name:`${activity.title} preview gallery`})).toBeNull();
+  expect(screen.getByRole('button',{name:/Next step/})).toBeTruthy();
+});
