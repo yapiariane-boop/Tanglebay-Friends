@@ -396,3 +396,36 @@ test.each(activities)('$title introduces the activity and offers a manual galler
   expect(screen.queryByRole('region',{name:`${activity.title} preview gallery`})).toBeNull();
   expect(screen.getByRole('button',{name:/Next step/})).toBeTruthy();
 });
+
+
+test.each(['discussion-cards','dimitris-lab'])('%s keeps next and previous guidance steps in view',async id=>{
+  const scrollIntoView=vi.fn();
+  const original=HTMLElement.prototype.scrollIntoView;
+  HTMLElement.prototype.scrollIntoView=scrollIntoView;
+  try{
+    window.location.hash=`/episodes/episode-1/activities/${id}`;
+    render(<App/>);const user=userEvent.setup();
+    await user.click(screen.getByRole('button',{name:/I’m playing with a group/}));
+    const variant=activities.find(a=>a.id===id)!.variants.group;
+    const level=variant.guidanceSections?3:2;
+    await screen.findByRole('heading',{level,name:variant.steps[0].title});
+    vi.mocked(window.scrollTo).mockClear();scrollIntoView.mockClear();
+    const count=variant.guidanceSections?variant.guidanceSections[0].steps.length+1:2;
+    for(let i=1;i<count;i++){
+      await user.click(screen.getByRole('button',{name:/Next step|Continue to How to Play/}));
+      const title=await screen.findByRole('heading',{level,name:variant.steps[i].title});
+      expect(document.activeElement).toBe(title);
+      expect(scrollIntoView.mock.instances.at(-1)).toBe(title.closest('article'));
+      expect(window.scrollTo).not.toHaveBeenCalled();
+    }
+    await user.click(screen.getByRole('button',{name:'Previous step'}));
+    expect(document.activeElement).toBe(await screen.findByRole('heading',{level,name:variant.steps[count-2].title}));
+    expect(window.scrollTo).not.toHaveBeenCalled();
+    await user.click(screen.getByRole('link',{name:'Episodes'}));
+    await screen.findByRole('heading',{name:'Which episode did you read?'});
+    expect(window.scrollTo).toHaveBeenCalledWith(0,0);
+  }finally{
+    if(original)HTMLElement.prototype.scrollIntoView=original;
+    else delete (HTMLElement.prototype as Partial<HTMLElement>).scrollIntoView;
+  }
+});
