@@ -63,3 +63,5 @@ html,body{background-color:#ffd5af;color-scheme:light}.artwork-picker button{mar
 .step-card,.section-step-content{scroll-margin-top:24px}.step-card h2:focus,.section-step-content h3:focus{outline:none}
 
 .site-links{display:flex;align-items:center;justify-content:flex-end;gap:20px;margin:0;font-size:14px;color:inherit}.site-links .header-link{max-width:none;text-align:left}@media(max-width:560px){header{flex-wrap:wrap}.site-links{margin-left:auto;gap:16px}}
+
+.activity-experience{display:inline-block;align-self:flex-start;max-width:100%;margin:12px 0 8px;padding:5px 11px;border:1px solid #d3dfcf;border-radius:999px;background:#edf3e7;color:#234c40;font-size:12px;font-weight:650;line-height:1.4}

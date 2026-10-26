@@ -97,7 +97,7 @@ function ActivityCard({activity,href}:{activity:Activity;href:string}) {
       </a>
       {multiple&&<><div className="carousel-arrows"><button type="button" onClick={()=>move(index-1)} aria-label={`Previous ${activity.title} image`}>‹</button><button type="button" onClick={()=>move(index+1)} aria-label={`Next ${activity.title} image`}>›</button></div><div className="carousel-dots">{images.map((img,i)=><button key={img.src} type="button" aria-label={`Show ${activity.title} image ${i+1} of ${images.length}`} aria-pressed={index===i} onClick={()=>move(i)}><span/></button>)}</div>{hovered&&<button className="carousel-pause" type="button" onClick={()=>setPaused(p=>!p)} aria-label={paused?'Resume image slideshow':'Pause image slideshow'}>{paused?'Play':'Pause'}</button>}</>}
     </div>
-    <a className="activity-card-link" href={href}><h2>{activity.title}</h2><p className="activity-catchphrase">{activity.catchphrase}</p><p className="activity-description">{activity.description}</p><span className="card-link">Choose how to play →</span></a>
+    <span className="activity-experience">{activity.experience}</span><a className="activity-card-link" href={href}><h2>{activity.title}</h2><p className="activity-catchphrase">{activity.catchphrase}</p><p className="activity-description">{activity.description}</p><span className="card-link">Choose how to play →</span></a>
   </article>;
 }
 

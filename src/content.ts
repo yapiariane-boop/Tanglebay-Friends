@@ -14,7 +14,7 @@ export interface GuidanceSection { placeholder?:boolean; id:string; title:string
 export interface PackFile { id: string; title: string; href: string; copies: string; optional?: boolean; placeholder?: boolean; pageCount?: number }
 export interface DuplexGuide { previews: {src:string; alt:string; label:string}[]; flipEdge: string; orientation:string; cards:number }
 export interface Variant { facilitationNote?: string; guidanceSections?: GuidanceSection[]; cubeAssembly?: {patternSrc:string;boardSrc:string}; comingSoonFiles?: string[]; comingSoonDescriptions?: Record<string,string>; duplexGuide?: DuplexGuide; guidanceLabel?: string; printNotice?: string; players: string; duration: string; steps: Step[]; printing: string; files: PackFile[] }
-export interface Activity { introduction: {headline:string;body:string}; id: string; title: string; catchphrase: string; description: string; episodeIds: string[]; color: string; artwork: {src?: string; alt: string}; gallery?: {src: string; alt: string}[]; variants: Record<Mode, Variant> }
+export interface Activity { experience: string; introduction: {headline:string;body:string}; id: string; title: string; catchphrase: string; description: string; episodeIds: string[]; color: string; artwork: {src?: string; alt: string}; gallery?: {src: string; alt: string}[]; variants: Record<Mode, Variant> }
 export interface Episode {id: string; title: string; description: string; artwork?: {src: string; alt: string}; comingSoon?: boolean}
 export const episodes: Episode[] = [
   {id:'episode-1', title:'The Orange Ghost Troubler', description:'Choose an activity to return to this episode’s world.', artwork:{src:'./artwork/episode-1-background.webp', alt:'Tanglebay friends on a beach with an orange ghost at sunset.'}},
@@ -713,6 +713,14 @@ const catchphrases: Record<string, string> = {
   "discussion-cards": "Step back into the story, challenge Tanglebay friends and discuss what they would have done differently."
 };
 
+const activityExperiences: Record<string,string> = {
+  "discussion-cards": "Thoughtful discussions",
+  "five-minutes": "Fast-paced debate",
+  "wild-path": "Turn-based adventure",
+  "dimitris-lab": "Hands-on discovery",
+  "officers-investigation": "Immersive investigation"
+};
+
 const activityIntroductions: Record<string,{headline:string;body:string}> = {
   "discussion-cards": {
     "headline": "Big questions. Different perspectives. Better conversations.",
@@ -736,7 +744,7 @@ const activityIntroductions: Record<string,{headline:string;body:string}> = {
   }
 };
 
-export const activities: Activity[] = definitions.map(([id,title,description,color],index)=>({id,title,introduction:activityIntroductions[id],catchphrase:catchphrases[id],description,color,episodeIds:index===0?['episode-1','episode-2']:(index<3?['episode-1']:['episode-1','episode-2']),artwork:id==='discussion-cards'?{src:'./artwork/discussion-cover.webp',alt:'Tanglebay Friends — The Discussion Cards cover, surrounded by illustrated characters.'}:id==='five-minutes'?{src:'./artwork/stand-image-2.webp',alt:'5 Seconds for a Stand board cover with Agree, Disagree and It Depends spaces.'}:id==='dimitris-lab'?{src:'./artwork/lab-image-1.webp',alt:'Inside Dimitri’s Lab cover featuring Dimitri welcoming future scientists.'}:id==='officers-investigation'?{src:'./artwork/investigation-image-3.webp',alt:'Officer’s Investigation Notebook cover — The Pearl’s Heaven Case.'}:id==='wild-path'?{src:'./artwork/wild-path-image-2.webp',alt:'The Wild Path board game cover featuring the board, character cards and dice.'}:{alt:`Artwork placeholder for ${title}`},gallery:id==='discussion-cards'?[
+export const activities: Activity[] = definitions.map(([id,title,description,color],index)=>({id,title,experience:activityExperiences[id],introduction:activityIntroductions[id],catchphrase:catchphrases[id],description,color,episodeIds:index===0?['episode-1','episode-2']:(index<3?['episode-1']:['episode-1','episode-2']),artwork:id==='discussion-cards'?{src:'./artwork/discussion-cover.webp',alt:'Tanglebay Friends — The Discussion Cards cover, surrounded by illustrated characters.'}:id==='five-minutes'?{src:'./artwork/stand-image-2.webp',alt:'5 Seconds for a Stand board cover with Agree, Disagree and It Depends spaces.'}:id==='dimitris-lab'?{src:'./artwork/lab-image-1.webp',alt:'Inside Dimitri’s Lab cover featuring Dimitri welcoming future scientists.'}:id==='officers-investigation'?{src:'./artwork/investigation-image-3.webp',alt:'Officer’s Investigation Notebook cover — The Pearl’s Heaven Case.'}:id==='wild-path'?{src:'./artwork/wild-path-image-2.webp',alt:'The Wild Path board game cover featuring the board, character cards and dice.'}:{alt:`Artwork placeholder for ${title}`},gallery:id==='discussion-cards'?[
  {src:'./artwork/discussion-cover.webp',alt:'Discussion Cards cover'},
  {src:'./artwork/discussion-preview-1.webp',alt:'Discussion card from page 96 about hiding the truth to protect someone'},
  {src:'./artwork/discussion-preview-2.webp',alt:'Discussion card from page 43 about speaking truth with care'},
