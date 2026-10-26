@@ -133,7 +133,8 @@ const standHomeSteps: Step[] = [
     "items": [
       "Each final vote earns that player 1 point. Count the votes: the player with the most wins the round. Starting choices never count towards the score.",
       "If the two arguments are the same, it’s a draw. An equal final vote count is also a draw.",
-      "Rotate Players and Judges, draw another question and go again. With only two players, skip the Judge vote and move to the next question."
+      "Rotate Players and Judges, draw another question and go again.",
+      "Playing with just two people? Your opponent is also the person you need to convince. After both arguments, tell each other what you found convincing — even if you still disagree."
     ],
     "visual": "judges"
   }

@@ -135,6 +135,9 @@ test.each(['home','group'] as const)('5 Seconds for a Stand %s guidance covers j
       if(mode==='home'){
         expect(screen.getByText(/Each final vote earns that player 1 point/)).toBeTruthy();
         expect(screen.getByText(/An equal final vote count is also a draw/)).toBeTruthy();
+        expect(screen.getByText(/Your opponent is also the person you need to convince/)).toBeTruthy();
+        expect(screen.getByText(/even if you still disagree/)).toBeTruthy();
+        expect(screen.queryByText(/skip the Judge vote/)).toBeNull();
       } else {
         expect(screen.getByText(/Anyone behind neither Player has no vote for that round/)).toBeTruthy();
         expect(screen.getByText(/Each Judge behind a Player earns that Player 1 point/)).toBeTruthy();
